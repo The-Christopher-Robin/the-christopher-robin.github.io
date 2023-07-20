@@ -153,6 +153,50 @@ stop            B   stop
 
 
 
+q) 2x+9
+
+Main.asm
+PRESERVE8 ; Indicate the code here preserve  
+; 8 byte stack alignment         
+                     THUMB     ; Indicate THUMB code is used       
+                 AREA    |.text|, CODE, READONLY
+			   
+                                          EXPORT __main 
+			  EXTERN  func
+; Start of CODE area 
+__main
+	LDR r0,=0x10;
+ BL func
+stop B stop
+  END
+
+PRESERVE8
+	THUMB
+	AREA |.text|, CODE, READONLY
+	EXPORT func
+	EXTERN func2
+	
+func
+	push{LR}
+	MOVS R1,#08
+	BL func2
+	pop{PC}
+    END
+
+
+
+       PRESERVE8
+	THUMB
+	AREA |.text|, CODE, READONLY
+	EXPORT func2
+	
+func2
+	MOVS r2,#08
+	BX LR
+       END
+
+
+
 include
 core support
 device support
