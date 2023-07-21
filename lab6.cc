@@ -1,3 +1,7 @@
+Q4B Design and simulate infrastructure less network, generate two traffic flows between nodes
+and analyse its performance.
+
+
 /* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2009 The Boeing Company
