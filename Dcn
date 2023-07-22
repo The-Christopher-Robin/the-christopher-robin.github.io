@@ -56,4 +56,19 @@ paste here: Ipv4GlobalRoutingHelper::PopulateRoutingTables():
 
 change line inside main function if(transportProt.compare("Udp")
 ./waf --run labfilename
+./waf --run labfilename --vis
+
+
+next ns3 question
+
+copy third.cc
+paste in headers from traffic control.cc
+include flow-monitor..
+
+towards the end
+delete from UdpEchoServerHelper till end of if statement.
+keep last 3 lines(simulator run, destroy return 0})
+
+
+
 
