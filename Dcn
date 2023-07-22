@@ -59,7 +59,8 @@ change line inside main function if(transportProt.compare("Udp")
 ./waf --run labfilename --vis
 
 
-next ns3 question
+next ns3 question (3rd) possibly (3B Design and simulate simple Extended Service Set with transmitting nodes in wireless LAN
+and determine the performance with respect to transmission of packets.)
 
 copy third.cc
 paste in headers from traffic control.cc
@@ -73,5 +74,16 @@ from traffic controll.cc
 copy //flow till first uint32_end so right before next uint32_ begins
 
 paste in 3rd.cc above simulator run
+2nd line sockettype --> "ns3::UdpSocketFactory"
+next line .install (csmaNodes.Get(0));
+
+2nd line after simulation time -->10
+next para onoffhelper (socket type --> "ns3::UdpSocketFactory"
+
+next para csmaNodes.get(1) maybe for this para 0, 1, simtime = 10
+next para simtim = 10
+from 3rd .cc copy and paste ABOVE FLOW
+Ipv4GlobalRoutingHelpher::PopulateRoutinTables();
+
 
 
