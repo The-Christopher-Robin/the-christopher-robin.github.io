@@ -7,4 +7,43 @@ And come back to terminal and stop capturing
 Type icmp, sort with time and write answers
 
 
+one ns3 file
 
+traffic-controll.cc copy
+delete full void function below NS_LOG above int main(int argc)
+
+make it 
+NetDeviceContainer devices01
+devices01 = pointToPoint.Install(nodes.Get(0), nodes.Get(1));
+NetDeviceContainer devices12
+devices12 = pointToPoint.Install(nodes.Get(1), nodes.Get(2));
+
+two lines later
+delete entirely trafficcontrolhelper tch onwards till makecallback(devicepacket soemthing) below stack.install
+above ipv4address helper
+
+after ipv4address helper address
+addrees.setbase("10.1.1.0"....)
+Ipv4InterfaceContainer interfaces01 = address.assign(devices01)
+copy and paste again
+addrees.setbase("10.1.2.0"....)
+Ipv4InterfaceContainer interfaces12 = address.assign(devices12)
+
+
+within //flow
+
+first para last line, nodes.Get(2));
+
+first inetsocketaddress appearance: (interfaces12.GetAddress(1)...)
+same para, nodes.get(0)
+
+delete entirely uniter32_t onwards till the end ((((KEEP SIMULATOR::DESTROY() and RETURN0;}
+
+
+
+copy third.cc from tutorial
+copy this line: Ipv4GlobalRoutingHelper::PopulateRoutingTables():
+
+
+paste in main file below Ipv4interfaceContainer interfaces12
+paste here: Ipv4GlobalRoutingHelper::PopulateRoutingTables():
