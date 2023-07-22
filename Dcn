@@ -1,12 +1,5 @@
 DCN
 
-ICMP
-First open wireshark using terminal and start capture 
-Then open terminal new window and type ping www.youtube.com 
-And come back to terminal and stop capturing
-Type icmp, sort with time and write answers
-
-
 1B
 Design and simulate a wired network with duplex links between 3 nodes with CDR over
 UDP. Set the queue size vary the bandwidth and find the number of packets dropped.
