@@ -199,7 +199,7 @@ main (int argc, char *argv[])
   onoff.SetAttribute ("DataRate", StringValue ("50Mbps")); //bit/s
   ApplicationContainer apps;
 
-  InetSocketAddress rmt (csmaInterfaces.GetAddress (1), port);
+  InetSocketAddress rmt (csmaInterfaces.GetAddress (1), port);//0
   rmt.SetTos (0xb8);
   AddressValue remoteAddress (rmt);
   onoff.SetAttribute ("Remote", remoteAddress);
