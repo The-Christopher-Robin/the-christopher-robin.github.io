@@ -84,6 +84,9 @@ next para csmaNodes.get(1) maybe for this para 0, 1, simtime = 10
 next para simtim = 10
 from 3rd .cc copy and paste ABOVE FLOW
 Ipv4GlobalRoutingHelpher::PopulateRoutinTables();
+run
+
+
 
 
 
