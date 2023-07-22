@@ -141,7 +141,7 @@ main (int argc, char *argv[])
   rmt.SetTos (0xb8);
   AddressValue remoteAddress (rmt);
   onoff.SetAttribute ("Remote", remoteAddress);
-  apps.Add (onoff.Install (nodes.Get (1)));
+  apps.Add (onoff.Install (nodes.Get (1))); //0
   apps.Start (Seconds (1.0));
   apps.Stop (Seconds (simulationTime + 0.1));
 
