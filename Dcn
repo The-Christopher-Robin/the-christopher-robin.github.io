@@ -7,10 +7,16 @@ And come back to terminal and stop capturing
 Type icmp, sort with time and write answers
 
 
-one ns3 file
+1B
+Design and simulate a wired network with duplex links between 3 nodes with CDR over
+UDP. Set the queue size vary the bandwidth and find the number of packets dropped.
 
 traffic-controll.cc copy
 delete full void function below NS_LOG above int main(int argc)
+
+
+NodeContainer nodes;
+nodes.Create(3); not 2
 
 make it 
 NetDeviceContainer devices01
@@ -47,3 +53,7 @@ copy this line: Ipv4GlobalRoutingHelper::PopulateRoutingTables():
 
 paste in main file below Ipv4interfaceContainer interfaces12
 paste here: Ipv4GlobalRoutingHelper::PopulateRoutingTables():
+
+change line inside main function if(transportProt.compare("Udp")
+./waf --run labfilename
+
