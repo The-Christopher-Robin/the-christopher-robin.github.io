@@ -113,22 +113,21 @@ sorted_arr = quick_sort(arr)
 print(sorted_arr)
 
 5a
-def prim_minimum_spanning_tree(locations, distances):
-    start_location = locations[0]  # Choosing the first location as the starting point
+def prim_minimum_spanning_tree(graph, start):
     visited = []
     mst = []
 
     # Initialize a dictionary to store the minimum cost edges for each location
     min_cost_edges = {}
-    for location in locations:
+    for location in graph:
         min_cost_edges[location] = (99999, None)
 
-    min_cost_edges[start_location] = (0, start_location)
+    min_cost_edges[start] = (0, start)
 
-    while len(visited) < len(locations):
+    while len(visited) < len(graph):
         # Find the location with the minimum cost edge from the set of unvisited locations
         current_location = min(
-            (loc for loc in locations if loc not in visited),
+            (loc for loc in graph if loc not in visited),
             key=lambda loc: min_cost_edges[loc][0]
         )
 
@@ -141,7 +140,7 @@ def prim_minimum_spanning_tree(locations, distances):
             mst.append((source, current_location, cost))
 
         # Update the minimum cost edges for the neighbors of the current location
-        for neighbor, distance in distances[current_location].items():
+        for neighbor, distance in graph[current_location].items():
             if neighbor not in visited and distance < min_cost_edges[neighbor][0]:
                 min_cost_edges[neighbor] = (distance, current_location)
 
@@ -152,9 +151,7 @@ def calculate_minimum_cost(mst):
     total_cost = sum(cost for _, _, cost in mst)
     return total_cost
 
-locations = ['A', 'B', 'C', 'D', 'E']
-
-distances = {
+graph = {
     'A': {'B': 2, 'C': 3},
     'B': {'A': 2, 'C': 4, 'D': 2},
     'C': {'A': 3, 'B': 4, 'D': 3, 'E': 2},
@@ -162,7 +159,8 @@ distances = {
     'E': {'C': 2, 'D': 5}
 }
 
-minimum_spanning_tree = prim_minimum_spanning_tree(locations, distances)
+start_location = 'A'
+minimum_spanning_tree = prim_minimum_spanning_tree(graph, start_location)
 minimum_cost = calculate_minimum_cost(minimum_spanning_tree)
 
 print("Minimum Spanning Tree:", minimum_spanning_tree)
