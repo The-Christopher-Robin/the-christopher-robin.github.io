@@ -12,3 +12,544 @@ def insertion_sort(arr):
 input_list = [12, 11, 13, 5, 6]
 insertion_sort(input_list)
 print("Sorted array:", input_list)
+
+2a
+def dfs(graph, start):
+    visited = []
+    stack = [start]
+
+    while stack:
+        node = stack.pop()
+        if node not in visited:
+            visited.append(node)
+            print(node, end=' ')  # Print the current node (or do any other desired processing)
+
+            for neighbor in graph[node]:
+                if neighbor not in visited:
+                    stack.append(neighbor)
+
+# Example usage:
+undirected_graph = {
+    0: [3, 2, 1],
+    1 :[0, 2, 4],
+    2:[0, 1, 4],
+    3:[0, 4],
+    4:[3, 2, 1]
+}
+
+start_node = 0
+print("DFS traversal starting from node", start_node)
+dfs(undirected_graph, start_node)
+
+3a
+def merge_sort_with_inversions(arr):
+    if len(arr) <= 1:
+        return arr, 0
+
+    mid = len(arr) // 2
+    left_half = arr[:mid]
+    right_half = arr[mid:]
+
+    left_half, left_inversions = merge_sort_with_inversions(left_half)
+    right_half, right_inversions = merge_sort_with_inversions(right_half)
+
+    merged_arr, merge_inversions = merge_with_inversions(left_half, right_half)
+
+    total_inversions = left_inversions + right_inversions + merge_inversions
+
+    return merged_arr, total_inversions
+
+def merge_with_inversions(left, right):
+    result = []
+    left_index, right_index = 0, 0
+    inversions = 0
+
+    while left_index < len(left) and right_index < len(right):
+        if left[left_index] <= right[right_index]:
+            result.append(left[left_index])
+            left_index += 1
+        else:
+            result.append(right[right_index])
+            right_index += 1
+            inversions += len(left) - left_index
+
+    result.extend(left[left_index:])
+    result.extend(right[right_index:])
+
+    return result, inversions
+
+# Example usage
+input_list = [12, 11, 13, 5, 6, 7]
+sorted_list, inversion_count = merge_sort_with_inversions(input_list)
+print("Sorted array:", sorted_list)
+print("Number of inversions:", inversion_count)
+
+4a
+def quick_sort(arr):
+    if len(arr) <= 1:
+        return arr
+
+    pivot = arr[len(arr) // 2]  # Choosing the middle element as the pivot
+    left = []
+    for x in arr:
+        if x < pivot:
+            left.append(x)
+    
+    middle = []
+    for x in arr:
+        if x == pivot:
+            middle.append(x)
+
+    right = []
+    for x in arr:
+        if x > pivot:
+            right.append(x)
+
+    return quick_sort(left) + middle + quick_sort(right)
+
+# Example usage
+arr = [3, 6, 8, 10, 1, 2, 1]
+sorted_arr = quick_sort(arr)
+print(sorted_arr)
+
+5a
+def prim_minimum_spanning_tree(locations, distances):
+    start_location = locations[0]  # Choosing the first location as the starting point
+    visited = []
+    mst = []
+
+    # Initialize a dictionary to store the minimum cost edges for each location
+    min_cost_edges = {}
+    for location in locations:
+        min_cost_edges[location] = (99999, None)
+
+    min_cost_edges[start_location] = (0, start_location)
+
+    while len(visited) < len(locations):
+        # Find the location with the minimum cost edge from the set of unvisited locations
+        current_location = min(
+            (loc for loc in locations if loc not in visited),
+            key=lambda loc: min_cost_edges[loc][0]
+        )
+
+        # Add the location to the visited list
+        visited.append(current_location)
+
+        # Update the MST with the minimum cost edge for the current location
+        cost, source = min_cost_edges[current_location]
+        if current_location != source:
+            mst.append((source, current_location, cost))
+
+        # Update the minimum cost edges for the neighbors of the current location
+        for neighbor, distance in distances[current_location].items():
+            if neighbor not in visited and distance < min_cost_edges[neighbor][0]:
+                min_cost_edges[neighbor] = (distance, current_location)
+
+    return mst
+
+
+def calculate_minimum_cost(mst):
+    total_cost = sum(cost for _, _, cost in mst)
+    return total_cost
+
+locations = ['A', 'B', 'C', 'D', 'E']
+
+distances = {
+    'A': {'B': 2, 'C': 3},
+    'B': {'A': 2, 'C': 4, 'D': 2},
+    'C': {'A': 3, 'B': 4, 'D': 3, 'E': 2},
+    'D': {'B': 2, 'C': 3, 'E': 5},
+    'E': {'C': 2, 'D': 5}
+}
+
+minimum_spanning_tree = prim_minimum_spanning_tree(locations, distances)
+minimum_cost = calculate_minimum_cost(minimum_spanning_tree)
+
+print("Minimum Spanning Tree:", minimum_spanning_tree)
+print("Minimum Cost:", minimum_cost)
+
+6a
+def isSubsetSum(set, n, sum):
+    # Base Cases
+    if sum == 0:
+        return True
+    if n == 0:
+        return False
+
+    # If last element is greater than sum, then ignore it
+    if set[n - 1] > sum:
+        return isSubsetSum(set, n - 1, sum)
+
+    # Check if sum can be obtained by either including or excluding the last element
+    if isSubsetSum(set, n - 1, sum):
+        return True
+    if isSubsetSum(set, n - 1, sum - set[n - 1]):
+        print(set[n - 1], end=' ')  # Print the value used to achieve the sum
+        return True
+
+    return False
+
+set = [32, 34, 6, 12, 5, 1, 155, 2]
+sum = 9
+n = len(set)
+if isSubsetSum(set, n, sum):
+    print("\nFound a subset with given sum")
+else:
+    print("No subset with given sum")
+
+
+
+1b
+def gale_shapley(men_preferences, women_preferences):
+    n = len(men_preferences)
+    men_engaged = [-1] * n  # -1 represents no engagement
+    women_engaged = [-1] * n  # -1 represents no engagement
+
+    # Helper function to check if a woman prefers a man over her current partner
+    def prefers_woman(woman, man, current_partner):
+        return women_preferences[woman].index(man) < women_preferences[woman].index(current_partner)
+
+    # Helper function to engage a man and a woman
+    def engage(man, woman):
+        men_engaged[man] = woman
+        women_engaged[woman] = man
+
+    # Main algorithm loop
+    while -1 in men_engaged:
+        man = men_engaged.index(-1)  # Find the first unengaged man
+        for woman in men_preferences[man]:
+            if women_engaged[woman] == -1:  # Woman is unengaged
+                engage(man, woman)
+                break
+            elif prefers_woman(woman, man, women_engaged[woman]):
+                # Woman prefers this man over her current partner, so engage her with this man and free the previous partner
+                engage(man, woman)
+                men_engaged[women_engaged[woman]] = -1
+                break
+
+    return men_engaged
+
+# Example usage
+men_preferences = [
+    [1, 0, 2],  # Preferences of man 0 (in order of preference): woman 1, woman 0, woman 2
+    [0, 1, 2],  # Preferences of man 1: woman 0, woman 1, woman 2
+    [1, 2, 0]   # Preferences of man 2: woman 1, woman 2, woman 0
+]
+
+women_preferences = [
+    [2, 1, 0],  # Preferences of woman 0: man 2, man 1, man 0
+    [0, 1, 2],  # Preferences of woman 1: man 0, man 1, man 2
+    [2, 1, 0]   # Preferences of woman 2: man 2, man 1, man 0
+]
+
+stable_matching = gale_shapley(men_preferences, women_preferences)
+print(stable_matching)
+
+2b
+def merge_sort(arr):
+    if len(arr) <= 1:
+        return arr
+
+    mid = len(arr) // 2
+    left_half = arr[:mid]
+    right_half = arr[mid:]
+
+    left_half = merge_sort(left_half)
+    right_half = merge_sort(right_half)
+
+    return merge(left_half, right_half)
+
+def merge(left, right):
+    result = []
+    left_index, right_index = 0, 0
+
+    while left_index < len(left) and right_index < len(right):
+        if left[left_index] < right[right_index]:
+            result.append(left[left_index])
+            left_index += 1
+        else:
+            result.append(right[right_index])
+            right_index += 1
+
+    result.extend(left[left_index:])
+    result.extend(right[right_index:])
+    return result
+
+# Example usage
+input_list = [12, 11, 13, 5, 6, 7]
+sorted_list = merge_sort(input_list)
+print("Sorted array:", sorted_list)
+
+3b
+def dijkstra(graph, source):
+    distances = {}
+    for node in graph:
+        distances[node] = 99999
+    distances[source] = 0
+    visited = []  # Using a list instead of a set
+    
+    while len(visited) < len(graph):
+        current_node = None
+        for node in graph:
+            if node not in visited and (current_node is None or distances[node] < distances[current_node]):
+                current_node = node
+
+        visited.append(current_node)  # Adding the current_node to the list
+        
+        for neighbor, weight in graph[current_node].items():
+            if distances[current_node] + weight < distances[neighbor]:
+                distances[neighbor] = distances[current_node] + weight
+
+    return distances
+
+# Example usage
+graph = {
+    '1': {'2': 10, '5': 100},
+    '2': {'1': 10, '3': 50},
+    '3': {'2': 50, '4': 20, '5': 10},
+    '4': {'3': 20, '5': 60},
+    '5': {'1': 100, '3': 10, '4': 60}
+}
+
+source_node = '1'
+shortest_distances = dijkstra(graph, source_node)
+print("Shortest Distances from Node", source_node, "to all other nodes:")
+print(shortest_distances)
+
+4b
+def find(parent, i):
+    if parent[i] != i:
+        parent[i] = find(parent, parent[i])
+    return parent[i]
+
+def union(parent, rank, x, y):
+    if rank[x] < rank[y]:
+        parent[x] = y
+    elif rank[x] > rank[y]:
+        parent[y] = x
+    else:
+        parent[y] = x
+        rank[x] += 1
+
+def kruskal_mst(edges, V):
+    result = []
+    i = 0
+    e = 0
+
+    edges.sort(key=lambda item: item[2])
+    
+    parent = list(range(V))
+    rank = [0] * V
+    
+    while e < V - 1:
+        u, v, w = edges[i]
+        i = i + 1
+        x = find(parent, u)
+        y = find(parent, v)
+
+        if x != y:
+            e = e + 1
+            result.append([u, v, w])
+            union(parent, rank, x, y)
+            
+    minimumCost = 0
+    print("Edges in the constructed MST:")
+    for u, v, weight in result:
+        minimumCost += weight
+        print("%d -- %d == %d" % (u, v, weight))
+    print("Minimum Spanning Tree:", minimumCost)
+
+
+edges = [
+    (0, 1, 2),
+    (0, 2, 3),
+    (1, 2, 4),
+    (1, 3, 2),
+    (2, 3, 3),
+    (2, 4, 2),
+    (4, 5, 5)
+]
+V = 5
+kruskal_mst(edges, V)
+
+5b
+def maximum_profit(jobs):
+    jobs.sort(key=lambda job: job[1])
+
+    n = len(jobs)
+    T = [0] * n
+
+    T[0] = jobs[0][2]
+    for i in range(1, n):
+        T[i] = max(jobs[i][2], T[i - 1])
+        for j in range(i - 1, -1, -1):
+            if jobs[j][1] <= jobs[i][0]:
+                T[i] = max(T[i], jobs[i][2] + T[j])
+                break
+
+    return max(T)
+
+# Example usage
+jobs = [
+    (1, 2, 100),
+    (2, 5, 200),
+    (3, 6, 300),
+    (4, 8, 400),
+    (5, 9, 500),
+    (6, 10, 100)
+]
+
+max_profit = maximum_profit(jobs)
+print("Maximum Profit:", max_profit)  # Output: Maximum Profit: 18
+
+6b
+def knapSack(W, wt, val, n):
+  
+    # Base Case
+    if n == 0 or W == 0 :
+        return 0
+  
+    
+    if (wt[n-1] > W):
+        return knapSack(W, wt, val, n-1)
+  
+    
+    else:
+        return (max(val[n-1] + knapSack(W-wt[n-1], wt, val, n-1),
+                    knapSack(W, wt, val, n-1)))
+
+value = [100, 60, 120, 300]
+weight = [20, 10, 40, 10]
+max_weigth = 60
+n = len(value)
+print (knapSack(max_weigth, weight, value, n))
+
+7b
+def printPath(parent, v):
+    if parent[v] == -1:
+        print(v, end=' ')
+        return
+    printPath(parent, parent[v])
+    print(v, end=' ')
+
+def BellmanFord(graph, V, src):
+    dist = [99999] * V
+    parent = [-1] * V
+    dist[src] = 0
+
+    for _ in range(V - 1):
+        for u, v, w in graph:
+            if dist[u] != 99999 and dist[u] + w < dist[v]:
+                dist[v] = dist[u] + w
+                parent[v] = u
+
+    print("Vertex Distance from Source:")
+    for i in range(V):
+        print(f"{i}\t\t{dist[i]}\t\tPath:", end=' ')
+        printPath(parent, i)
+        print()
+
+V = 6
+graph = [
+    (0, 1, -4),
+    (0, 5, -3),
+    (1, 3, -1),
+    (1, 4, -2),
+    (2, 1, 8),
+    (2, 5, 3),
+    (3, 0, 6),
+    (3, 5, 4),
+    (4, 2, -3),
+    (4, 5, 2),
+    
+]
+src = 0
+
+BellmanFord(graph, V, src)
+
+8b
+N = 4
+
+def print_solution(board):
+    for row in board:
+        for cell in row:
+            if cell == 1:
+                print('Q', end=' ')
+            else:
+                print('.', end=' ')
+        print()
+
+def is_safe(board, row, col):
+    for i in range(col):
+        if board[row][i] == 1:
+            return False
+
+    for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
+        if board[i][j] == 1:
+            return False
+
+    for i, j in zip(range(row, N, 1), range(col, -1, -1)):
+        if board[i][j] == 1:
+            return False
+
+    return True
+
+def solve_n_queens_util(board, col):
+    if col >= N:
+        return True
+
+    for i in range(N):
+        if is_safe(board, i, col):
+            board[i][col] = 1
+            if solve_n_queens_util(board, col + 1):
+                return True
+            board[i][col] = 0
+
+    return False
+
+def solve_n_queens():
+    board = [[0] * N for _ in range(N)]
+
+    if not solve_n_queens_util(board, 0):
+        print("Solution does not exist")
+        return False
+
+    print_solution(board)
+    return True
+
+solve_n_queens()
+
+9b
+n = 4 
+dist = [[0, 0, 0, 0, 0], [0, 0, 10, 15, 20], [
+    0, 10, 0, 25, 25], [0, 15, 25, 0, 30], [0, 20, 25, 30, 0]]
+ 
+# memoization for top down recursion
+memo = [[-1]*(1 << (n+1)) for _ in range(n+1)]
+ 
+ 
+def fun(i, mask):
+
+    if mask == ((1 << i) | 3):
+        return dist[1][i]
+ 
+    # memoization
+    if memo[i][mask] != -1:
+        return memo[i][mask]
+ 
+    res = 10**9  # result of this sub-problem
+ 
+   
+    for j in range(1, n+1):
+        if (mask & (1 << j)) != 0 and j != i and j != 1:
+            res = min(res, fun(j, mask & (~(1 << i))) + dist[j][i])
+    memo[i][mask] = res  # storing the minimum value
+    return res
+ 
+ 
+
+ans = 10**9
+for i in range(1, n+1):
+    ans = min(ans, fun(i, (1 << (n+1))-1) + dist[i][1])
+ 
+print("The cost of most efficient tour = " + str(ans))
