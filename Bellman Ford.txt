@@ -1,0 +1,401 @@
+import java.util.*;
+
+public class Main {
+
+    static int[] bellmanFord(int edges[][], int V, int src) {
+    int dis[]=new int[V];
+    int max=9;
+    for(int i=0;i<V-1;i++)
+    {
+        dis[i]=max;
+        System.out.println(dis[i]);
+    }
+    
+    System.out.println(dis);
+    dis[src]=0; // Since we are already on source vertex, we can reach it within no time.
+    
+    // Step 2 - For V-1 times, traversing over,
+    // all the edges and checking if a shorter
+    // path between any edge u to v is possible. 
+    
+    int u,v,wt;
+    for(int i=0;i<V-1;i++)  // Iterating V-1 times 
+    {
+        for(int j=0;j<edges.length;j++) // Iterating over all the edges. 
+        {
+            u=edges[j][0]; // Source vertex.
+            v=edges[j][1]; // Destination vertex.
+            wt=edges[j][2];// Weight of the edge. 
+            
+            // If we can reach v from u in less time it 
+            // is currently required to reach v then update 
+            // the value.
+            if(dis[u]!=max&&dis[u]+wt<dis[v])
+            dis[v]=dis[u]+wt;
+        }
+    }
+    
+    // Step 3 - Checking for negative edge weight cycle, 
+    // by checking if the underliying condition satifies.
+    for(int j=0;j<edges.length;j++)
+    {
+        u=edges[j][0];
+        v=edges[j][1];
+        wt=edges[j][2];
+        
+        // If the below condition satisfies, it means negative 
+        // edge weight cycle exists. Because traversing again 
+        // is reducing the cost and in order to minimize the 
+        // cost we can traverse till infinity and hence a proper 
+        // answer can't be calculated. 
+        if(dis[u]!=max&&dis[u]+wt<dis[v])
+        return new int[0];
+    }
+    
+    return dis; // returning our answer vector/array.
+}
+
+
+
+    public static void main(String[] args) {
+        int V = 5; // Number of vertices
+        int E = 8; // Number of edges
+        int edges[][] = { { 0, 1, 6 }, { 0, 2, 5 }, { 2, 1,-2}, { 1, 3, -1 }, { 2, 3, 4 },
+                          { 2, 4, 3 }, { 3, 4, 3 }};
+        int src = 0; // Source vertex
+
+        int[] shortestDistances = bellmanFord(edges, V, src);
+
+        if (shortestDistances.length == 0) {
+            System.out.println("Graph contains negative-weight cycle!");
+        } else {
+            System.out.println("Vertex\tDistance");
+            for (int i = 0; i < V; i++) {
+                System.out.println(i + "\t\t" + shortestDistances[i]);
+            }
+        }
+    }
+}
+
+
+import java.io.*;
+class crc_gen
+{
+	public static void main(String args[]) throws IOException
+	{
+		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+ 		int[] data;
+	            int[] div;
+	            int[] divisor;
+                        int[] rem;
+                        int[] crc;
+                        int data_bits, divisor_bits, tot_length;
+ 
+		
+		System.out.println("Enter number of data bits : ");
+		data_bits=Integer.parseInt(br.readLine());
+		data=new int[data_bits];
+
+		System.out.println("Enter data bits : ");
+		for(int i=0; i<data_bits; i++)
+		data[i]=Integer.parseInt(br.readLine());
+
+		System.out.println("Enter number of bits in divisor : ");
+		divisor_bits=Integer.parseInt(br.readLine());
+		divisor=new int[divisor_bits];
+
+		System.out.println("Enter Divisor bits : ");
+		for(int i=0; i<divisor_bits; i++)
+		divisor[i]=Integer.parseInt(br.readLine());
+		System.out.print("Data bits are : ");
+
+		for(int i=0; i< data_bits; i++)
+		System.out.print(data[i]); 
+		 System.out.println();
+ 
+		System.out.print("divisor bits are : ");
+		for(int i=0; i< divisor_bits; i++)
+		System.out.print(divisor[i]); 
+		System.out.println();
+ 
+		tot_length=data_bits+divisor_bits-1; 
+	           div=new int[tot_length];
+	           rem=new int[tot_length];
+                      crc=new int[tot_length];
+ /*------------------ CRC GENERATION-----------------------*/ 
+ 
+	           for(int i=0;i<data.length;i++)
+                      div[i]=data[i];
+
+		System.out.print("Dividend (after appending 0's) are : ");
+		for(int i=0; i< div.length; i++)
+		System.out.print(div[i]);
+		System.out.println();
+
+		for(int j=0; j<div.length; j++)
+		{
+			 rem[j] = div[j];
+		}
+
+		 rem=divide(div, divisor, rem);
+
+		
+
+		for(int i=0;i<div.length;i++)//append dividend and ramainder
+		 {
+ 			crc[i]=(div[i]^rem[i]);
+ 		 }
+
+		System.out.println();
+		System.out.println("CRC code : ");
+		for(int i=0;i<crc.length;i++)
+		System.out.print(crc[i]);
+
+ /*-------------------ERROR DETECTION---------------------*/
+		System.out.println();
+		System.out.println("Enter CRC code of "+tot_length+" bits : ");
+		for(int i=0; i<crc.length; i++)
+		crc[i]=Integer.parseInt(br.readLine());
+
+		/* System.out.print("crc bits are : ");
+		for(int i=0; i< crc.length; i++)
+		 System.out.print(crc[i]); 
+		System.out.println();
+		*/
+		for(int j=0; j<crc.length; j++)
+		{
+			rem[j] = crc[j];
+		}
+
+		 rem=divide(crc, divisor, rem); 
+ 		for(int i=0; i< rem.length; i++)
+		{
+ 			if(rem[i]!=0)
+			{
+				 System.out.println("Error");
+				break;
+			}
+			 if(i==rem.length-1)
+			System.out.println("No Error");
+		 }
+
+		System.out.println("THANK YOU.... :)");
+	 }
+
+    static int[] divide(int div[],int divisor[], int rem[])
+    {
+	int cur=0;
+	while(true)
+ 	{
+		for(int i=0;i<divisor.length;i++)
+		 rem[cur+i]=(rem[cur+i]^divisor[i]);
+		while(rem[cur]==0 && cur!=rem.length-1)
+		 cur++;
+		 if((rem.length-cur)<divisor.length)
+		break;
+	 }
+ 	return rem;
+     }
+
+}
+
+
+
+
+Server.java
+
+
+import java.net.*; 
+import java.io.*; 
+public class TCPS 
+{ 
+public static void main(String[] args) throws Exception 
+{ 
+ServerSocket sersock=new ServerSocket(4000); 
+System.out.println("Server ready for connection"); 
+
+Socket sock=sersock.accept(); 
+
+System.out.println("Connection Is successful and waiting for chatting"); 
+
+InputStream istream=sock.getInputStream(); 
+
+BufferedReader fileRead=new BufferedReader(new InputStreamReader(istream)); 
+
+String fname=fileRead.readLine(); 
+
+BufferedReader ContentRead=new BufferedReader(new FileReader(fname)); 
+
+OutputStream ostream=sock.getOutputStream(); 
+
+PrintWriter pwrite=new PrintWriter(ostream,true); 
+
+String str; 
+
+while((str=ContentRead.readLine())!=null){ 
+
+pwrite.println(str); 
+
+} 
+sock.close(); 
+sersock.close(); 
+pwrite.close(); 
+fileRead.close(); 
+ContentRead.close(); 
+} 
+}
+
+
+
+Client.java
+import java.net.*; 
+import java.io.*; 
+public class TCPC
+{ 
+public static void main(String[] args) throws Exception 
+{ 
+Socket sock=new Socket("127.0.01",4000); 
+
+System.out.println("Enter the filename"); 
+
+BufferedReader keyRead=new BufferedReader(new InputStreamReader(System.in)); 
+
+String fname=keyRead.readLine(); 
+
+OutputStream ostream=sock.getOutputStream(); 
+
+PrintWriter pwrite=new PrintWriter(ostream,true); 
+
+pwrite.println(fname); 
+
+InputStream istream=sock.getInputStream(); 
+
+BufferedReader socketRead=new BufferedReader(new InputStreamReader(istream)); 
+
+String str; 
+while((str=socketRead.readLine())!=null) 
+{ 
+System.out.println(str); 
+} 
+
+pwrite.close(); 
+socketRead.close(); 
+keyRead.close(); 
+} 
+}  
+
+
+
+
+import java.util.Scanner;
+public class TDM
+{
+public static void main(String args[])
+{
+int n,i,qt,count=0,temp,sq=0,bt[],wt[],tat[],rem_bt[];
+float awt=0,atat=0;
+bt = new int[10];
+wt = new int[10];
+tat = new int[10];
+rem_bt = new int[10];
+Scanner s=new Scanner(System.in);
+System.out.print("Enter the number of stations (maximum 10) = ");
+n = s.nextInt();
+System.out.print("Enter the processing time for each channel\n");
+for (i=0;i<n;i++)
+{
+System.out.print("S"+i+" = "); //stations Input
+bt[i] = s.nextInt();
+rem_bt[i] = bt[i];
+}
+System.out.print("Enter the frame size: "); // Frame size for each station
+qt = s.nextInt();
+while(true)
+{
+for (i=0,count=0;i<n;i++)
+{
+temp = qt;
+if(rem_bt[i] == 0)
+{
+count++;
+continue;
+}
+if(rem_bt[i]>qt)
+rem_bt[i]= rem_bt[i] - qt;
+else
+if(rem_bt[i]>=0)
+{
+temp = rem_bt[i];
+rem_bt[i] = 0;
+}
+sq = sq + temp;
+tat[i] = sq;
+}
+if(n == count)
+break;
+}
+System.out.print("--------------------------------------------------------------------------------");
+System.out.print("\nStation\t Processing Time\t Completion Time\t Waiting
+Time\n");
+System.out.print("--------------------------------------------------------------------------------");
+for(i=0;i<n;i++)
+{
+wt[i]=tat[i]-bt[i];
+awt=awt+wt[i];
+atat=atat+tat[i];
+System.out.print("\n \t"+(i+1)+"\t \t"+bt[i]+"\t\t "+tat[i]+"\t\t\t "+wt[i]+"\n");
+}
+}
+}
+
+
+import java.util.Scanner;
+import java.lang.*;
+public class lab7 {
+public static void main(String[] args)
+{
+int i;
+int a[]=new int[20];
+int buck_rem=0,buck_cap=4,rate=3,sent,recv;
+Scanner in = new Scanner(System.in);
+System.out.println("Enter the number of packets");
+int n = in.nextInt();
+System.out.println("Enter the packets");
+for(i=1;i<=n;i++)
+a[i]= in.nextInt();
+System.out.println("Clock \t packet size \t accept \t sent \t remaining");
+for(i=1;i<=n;i++)
+{
+if(a[i]!=0)
+{
+if(buck_rem+a[i]>buck_cap)
+recv=-1;
+else
+{
+recv=a[i];
+buck_rem+=a[i];
+}
+}
+else
+recv=0;
+if(buck_rem!=0)
+{
+if(buck_rem<rate)
+{	sent=buck_rem;
+buck_rem=0;
+}
+else
+{
+sent=rate;
+buck_rem=buck_rem-rate;
+}
+}
+else
+sent=0;	
+if(recv==-1)
+System.out.println(+i+ "\t\t" +a[i]+ "\t dropped \t" +  sent +"\t" +buck_rem);
+else
+System.out.println(+i+ "\t\t" +a[i] +"\t\t" +recv +"\t" +sent + "\t" +buck_rem);
+}
+}
+}
