@@ -1,0 +1,228 @@
+1.Which of the following scheduling algorithm is non preemptive ?
+a. Round robin
+b. First in first out
+c. Multilevel query scheduling
+d. Multilevel query scheduling with feedback
+Answer : B
+2. The maximum number of processes that can be in Ready state for a computer
+system with n CPUs is
+(a) n
+(b) n²
+(c) 2n
+(d) Independent of n
+Answer : D
+3. System calls are usually invoked by using
+(a) a software interrupt
+(b) polling
+(c) an indirect jump
+(d) a privileged instruction
+Answer : A
+4. Which of the following actions is/are typically not performed by the operating
+system when switching context from process A to process B?
+(a) Saving current register values and restoring saved register values for process B.
+(b) Changing address translation tables.
+(e) Swapping out the memory image of process A to the disk.
+(d) Invalidating the translation look-aside buffer.
+Answer : C,D
+5. A processor needs software interrupt to
+(a) Test the interrupt system of the processor
+(b) Implement co-routines
+(c) Obtain system services which need execution of privileged instructions
+(d) Return from subroutine
+Answer : C
+6. A CPU has two modes-privileged and non- privileged. In order to change the
+mode from privileged to non-privileged
+(a) a hardware interrupt is needed
+(b) a software interrupt is needed
+(c) a privileged instruction (which does not generate an interrupt) is needed
+(d) a non-privileged instruction (which does notgenerate an interrupt) is needed
+Answer : B
+7. Suppose a processor does not have any stack Frohning pointer register. Which of
+the following statement is true ?
+(a) It cannot have subroutine call instruction
+(b) It can have subroutine call instruction, but no nested subroutine calls
+(c) Nested subroutine calls are possible,but interrupts are not.
+(d) All sequences of subroutine calls and also interrupts are possible .
+Answer : A
+8. When an interrupt occurs, an operating system
+(a)ignores the interrupt
+(b) always changes state of interrupted process after processing the interrupt
+(c) always resumes execution of interrupted process after processing the interrupt
+(d) may change state of interrupted process to 'blocked' and schedule another
+process
+Answer : D
+9. Which of the following devices should get higher priority in assigning interrupts?
+a. Hard disk
+b. Printer
+c. Keyboard
+d. Floppy disk
+Answer :C
+10. A process executes the code
+ fork();
+ fork();
+ fork();
+The total number of child processes created
+a) 3
+b) 4
+c) 7
+d) 8
+Answer : 7 is the answer. The number of child process within n-fork() is 2n
+-1
+i.e 23
+-1 = 7
+11.Which one of the following options guarantee that a computer system will
+transition from user mode to kernel mode?
+A) Function Call
+B) malloc Call
+C) Page Fault
+D) System Call
+Answer: D
+12. Which of the following standard C library functions will always invoke a system
+call when executed from a single-threaded process in a UNIX/Linux operating
+system?
+A) exit
+B) malloc
+C) sleep
+D) strlen
+Answer: A
+13. The following C program is executed on a Unix/Linux system:
+#include <unistd.h>
+int main() {
+int i;
+for (i = 0; i < 10; i++)
+ if (i % 2 0) fork();
+return 0;
+}
+The total number of child process created is?
+A) 31
+B) 63
+C) 5
+D) 6
+Answer: A
+14.The following C program:
+{
+fork(); fork(); printf("yes");
+}
+If we execute this core segment, how many times the string yes will be printed?
+A) Only once
+B) 2 times
+C) 4 times
+D) 8 times
+Answer: C
+15. What is the output of the following program?
+main()
+{
+int a=10;
+if(fork()== 0)
+ a++;
+printf("%d\n",a);
+}
+A) 10 and 11
+B) 10
+C) 11
+D) 11 and 11
+Answer: A
+16.A process executes the code
+fork();
+fork();
+fork();
+The total number of child processes created is?
+A) 3
+B) 4
+C) 7
+D) 8
+Answer: C
+17.Fork is
+A) the creation of a new job
+B) the dispatching of a task
+C) increasing the priority of a task
+D) the creation of a new process
+18. A process executes the following code
+for (i = 0; i < n; i++)
+ fork();
+The total number of child processes created is
+A) n
+B) 2^n - 1
+C) 2^n
+D) 2^(n+1) -1
+Answer: B
+19. A user level process in Unix traps the signal sent on a Ctrl-C input, and has a
+signal handling routine that saves appropriate files before terminating the process.
+When a Ctrl-C input is given to this process, what is the mode in which the signal
+handling routine executes?
+A) User mode
+B) Kernel mode
+C) Superuser mode
+D) Privileged mode
+20. System calls are usually invoked by using
+A) a software interrupt
+B) polling
+C) an indirect jump
+D) a privileged instruction
+Answer: A
+21. What is the swap space in the disk used for?
+(a) Saving temporary html pages
+(b) Saving process data
+(c) Storing the super-block
+(d) Storing device drivers
+Answer : B
+22. Increasing the RAM of a computer typically improves performance because:
+(a) Virtual memory increases
+(b) Larger RAMs are faster
+(c) Fewer page faults occur
+(d) Fewer segmentation faults occur
+Answer : C
+23.Which of the following is not a form of memory?
+a. Instruction cache
+b. Instruction register
+c. Instruction opcode
+d. Translation look a side buffer
+Answer: C
+24. The following two functions P1 and P2 that share a variable B with an initial
+value of 2 execute concurrently. P1( ) { C = B – 1; B = 2 * C; } P2( ) { D = 2 * B; B = D
+- 1; } The number of distinct values that B can possibly take after the execution
+is___________.
+Answer: 3
+25. 1. Consider the following statements about process state transitions for a
+system using preemptive scheduling. I. A running process can move to a ready state
+II. A ready process can move to a ready state III. A blocked process can move to a
+running state IV. A blocked process can move to a ready state
+Answer:C
+26.Let the time taken to switch from user mode to kernel mode of execution
+be T1 while time taken to switch between two user processes be T2. Which of the
+following is correct?
+A. T1>T2
+B. T1=T2
+C. T1<T2
+D. Nothing can be said about the relation between T1 and T2
+Answer:C
+Time taken to switch two processes is very large as compared to time taken to
+switch between kernel and user mode of execution because :
+When you switch processes, you have to do a context switch, save the PCB of
+previous process (note that the PCB of a process in Linux has over 95 entries), then
+save registers and then load the PCB of new process and load its registers etc.
+When you switch between kernel and user mode of execution, OS has to
+just change a single bit at hardware level which is very fast operation.
+So, answer is: (C).
+27. The following are some events that occur after a device controller issues an
+interrupt while process L is under execution.
+(P) The processor pushes the process status of L onto the control stack.
+(Q) The processor finishes the execution of the current instruction.
+(R) The processor executes the interrupt service
+routine.
+(S) The processor pops the process status of L from the control stack.
+(T) The processor loads the new PC value based on the interrupt.
+Which one of the following is the correct order in which the events above occur?
+a. QPTRS
+b. PTRSQ
+c. TRPQS
+d. QTPRS
+Answer : A
+28. Which one of the following is FALSE?
+(a) User-level threads are not scheduled by the kernel.
+(b) When a user-level thread is blocked, all other threads of its process are blocked.
+(c) Context switching between user-level thread is faster than context switching
+between kernel-level threads.
+(d) Kernel level threads cannot share the code segment.
+Answer : We know that kernel level threads can share the code segment therefore
+option (d) is false. Hence the correct option is (d)
