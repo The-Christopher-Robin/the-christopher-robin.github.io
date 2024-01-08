@@ -1,0 +1,282 @@
+use restaurant
+switched to db restaurant
+db.createCollection(“rest")
+{ "ok" : 1 }
+db.rest.insert({name:"McD",building:12,street:"KR",area:"JN",pin:072,ID:1,cuisine:"fast
+food",landmark:"post office",od:"yes",famousfor:"cheese burger"});
+WriteResult({ "nInserted" : 1 })
+db.rest.insert({name:"Tailo",building:14, street:"MG", area:"Bangalore",pin:45,ID:2,
+cuisine:"Italian",landmark:"bank",od:"yes",famousfor:"pasta"})
+WriteResult({ "nInserted" : 1 })
+db.rest.insert({name:"Kesar",building:15, street:"SS",area:"Bangalore",pin:55,ID:3, cuisine:"north
+indian",landmark:"milk factory",od:"no",famousfor:"north indian thali"})
+WriteResult({ "nInserted" : 1 })
+//List the name and address of all restaurants in Bangalore with Italian cuisine.
+db.rest.find({cuisine:"Italian",area:"Bangalore"},
+{name:1,building:1,street:1,area:1,pin:1,_id:0}).pretty()
+{ "name" : "Tailo", "building" : 14 , “street” : “MG” , “area” : “Bangalore” , “pin” : 45 }
+//List the name, address and nearby landmarks of all restaurants in Bangalore where north
+Indianthali is available.
+db.rest.find({famousfor:"north indian thali",area:"Bangalore"},
+{name:1,building:1,street:1,area:1,pin:1,landmark:1,_id:0})
+{ "name" : "Kesar", "building" : 15 , “street” : “SS” , “area” : “Bangalore” , “pin” : 55 ,
+"landmark" : "milk factory" } 
+
+
+
+
+
+use restaurant
+switched to db restaurant
+db.createCollection(“rest")
+{ "ok" : 1 }
+db.rest.insert({name:"McD",building:12, street:"KR", area:"JN" pin:072,ID:1, cuisine:"fast
+food",landmark:"post office",od:"yes",famousfor:"cheese burger"})
+WriteResult({ "nInserted" : 1 })
+db.rest.insert({name:"Tailo",building:14, street:"MG", area:"Bangalore" pin:45,ID:2,
+cuisine:"Italian",landmark:"bank",od:"yes",famousfor:"pasta"})
+WriteResult({ "nInserted" : 1 })
+db.rest.insert({name:"Kesar",building:15, street:”SS”,area:"Bangalore",pin:55,ID:3, cuisine:"north
+indian",landmark:"milk factory",od:"no",famousfor:"north indian thali”})
+WriteResult({ "nInserted" : 1 })
+//List the name, address and nearby landmarks of all restaurants in Bangalore where north
+Indianthali is available.
+db.rest.find({famousfor:"north indian thali",area:"Bangalore"},
+{name:1,building:1,street:1,area:1,pin:1,landmark:1,_id:0})
+{ "name" : "Kesar", "building" : 15 , "street" : "SS" , "area" : "Bangalore" , "pin" : 55 , "landmark" :
+"milk factory" }
+//List the name and address of restaurants and also the dish the restaurant is famous for, in
+Bangalore.
+db.rest.find({area:"Bangalore"},{name:1, building:1, street:1, area:1, pin:1, famousfor:1})
+
+
+
+
+
+
+use restaurant
+switched to db restaurant
+db.createCollection(“rest")
+{ "ok" : 1 }
+db.rest.insert({name:"McD",building:12, street:"KR", area:"JN" pin:072,ID:1, cuisine:"fast
+food",landmark:"post office",od:"yes",famousfor:"cheese burger"})
+WriteResult({ "nInserted" : 1 })
+db.rest.insert({name:"Tailo",building:14, street:"MG", area:"Bangalore" pin:45,ID:2,
+cuisine:"Italian",landmark:"bank",od:"yes",famousfor:"pasta"})
+WriteResult({ "nInserted" : 1 })
+db.rest.insert({name:"Kesar",building:15, street:"SS",area:"Bangalore",pin:55,ID:3, cuisine:"north
+indian",landmark:"milk factory",od:"no",famousfor:"north indian thali"})
+WriteResult({ "nInserted" : 1 })
+//List the name, address and nearby landmarks of all restaurants in Bangalore where north
+Indianthali is available.
+db.rest.find({famousfor:"north indian thali",area:"Bangalore"},
+{name:1,building:1,street:1,area:1,pin:1,landmark:1,_id:0})
+{ "name" : "Kesar", "building" : 15 , “street” : “SS” , “area” : “Bangalore” , “pin” : 55 ,
+"landmark" : "milk factory" }
+//List the name and address of restaurants and also the dish the restaurant is famous for, in
+Bangalore where online delivery is available.
+db.rest.find({area:"Bangalore",od:"yes"},{name:1, building:1, street:1, arear:1, pin:1, famousfor:1})
+
+
+
+
+
+
+db.createCollection("tourist")
+{ "ok" : 1 }
+db.tourist.insert([{place:"bangalore",address:"karnataka",id:1,tour_att:"att1",time:"jan",mode:"train
+",acc:"acc1",food:"chicken"}])
+db.tourist.insert([{place:"kochi",address:"kerala",id:2,tour_att:"att2",time:"feb",mode:"boat",acc:"a
+cc2",food:"fish fry"}])
+db.tourist.insert([{place:"agra",address:"delhi",id:3,tour_att:"taj
+mahal",time:"march",mode:"car",acc:"acc3",food:"petha"}])
+//List all the tourist places of Karnataka
+db.tourist.find({address:"karnataka"},{tour_att:true}).pretty()
+{ "_id" : ObjectId("5c27375e7fd87cec5944fab7"), "tour_att" : "att1" }
+//List the tourist attractions of Kerala. Exclude accommodation and food.
+db.tourist.find({address:"kerala"},{acc:0,food:0}).pretty()
+{
+"_id" : ObjectId("5c2737be7fd87cec5944fab8"),
+"place" : "kochi",
+"address" : "kerala",
+"id" : 2,
+"tour_att" : "att2",
+"time" : "feb",
+"mode" : "boat",
+}
+
+
+
+
+
+
+db.createCollection("tourist")
+{ "ok" : 1 }
+db.tourist.insert([{place:"bangalore",address:"karnataka",id:1,tour_att:"att1",time:"jan",mode:"train
+",acc:"acc1",food:"chicken"}])
+db.tourist.insert([{place:"kochi",address:"kerala",id:2,tour_att:"att2",time:"feb",mode:"boat",acc:"a
+cc2",food:"fish fry"}])
+db.tourist.insert([{place:"agra",address:"delhi",id:3,tour_att:"taj
+mahal",time:"march",mode:"car",acc:"acc3",food:"petha"}])
+//List the tourist attractions of Kerala. Exclude accommodation and food.
+db.tourist.find({address:"kerala"},{acc:0,food:0}).pretty()
+{
+"_id" : ObjectId("5c2737be7fd87cec5944fab8"),
+"place" : "kochi",
+"address" : "kerala",
+"id" : 2,
+"tour_att" : "att2",
+"time" : "feb",
+"mode" : "boat",
+}
+//List the places sorted state wise.
+db.tourist.find({},{place:1}).sort({address:1})
+{ "_id" : ObjectId("5c2738557fd87cec5944fab9"), "place" : "agra" }
+{ "_id" : ObjectId("5c27375e7fd87cec5944fab7"), "place" : "bangalore" }
+{ "_id" : ObjectId("5c2737be7fd87cec5944fab8"), "place" : "kochi" }
+
+
+
+
+
+db.createCollection("tourist")
+{ "ok" : 1 }
+db.tourist.insert([{place:"bangalore",address:"karnataka",id:1,tour_att:"att1",time:"jan",mode:"train
+",acc:"acc1",food:"chicken"}])
+db.tourist.insert([{place:"kochi",address:"kerala",id:2,tour_att:"att2",time:"feb",mode:"boat",acc:"a
+cc2",food:"fish fry"}])
+db.tourist.insert([{place:"agra",address:"delhi",id:3,tour_att:"taj
+mahal",time:"march",mode:"car",acc:"acc3",food:"petha"}])
+//List all the tourist places of Karnataka.
+db.tourist.find({address:"karnataka"},{tour_att:true}).pretty()
+{ "_id" : ObjectId("5c27375e7fd87cec5944fab7"), "tour_att" : "att1" }
+//List the places sorted state wise.
+db.tourist.find({},{place:1}).sort({address:1})
+{ "_id" : ObjectId("5c2738557fd87cec5944fab9"), "place" : "agra" }
+{ "_id" : ObjectId("5c27375e7fd87cec5944fab7"), "place" : "bangalore" }
+{ "_id" : ObjectId("5c2737be7fd87cec5944fab8"), "place" : "kochi" }
+
+
+
+
+
+db.createCollection("movie")
+{ "ok" : 1 }
+db.movie.insert([{act_n:"ram",act_id:13,act_bdate:"2/3/1997",dir_n:"williams",dir_id:101,dir_bdat
+e:"12/9/1987",film:"battleship",year:2015,type:"thriller"}])
+db.movie.insert([{act_n:"john",act_id:11,act_bdate:"1/2/1998",dir_n:"ram",dir_id:100,dir_bdate:"2/
+3/1997",film:"john wick",year:2012,type:"killer"}])
+db.movie.insert([{act_n:"elly",act_id:12,act_bdate:"4/12/1998",dir_n:"ram",dir_id:100,dir_bdate:"2
+/3/1997",film:"aquaman",year:2012,type:"action"}])
+db.movie.insert([{act_n:"ram",act_id:13,act_bdate:"2/3/1997",dir_n:"thomas",dir_id:103,dir_bdate:
+"12/3/1999",film:"xxx",year:2018,type:"action"}])
+db.movie.insert([{act_n:"john",act_id:11,act_bdate:"1/2/1998",dir_n:"ram",dir_id:100,dir_bdate:"2/
+3/1997",film:"mr.bean",year:2018,type:"comedy"}])
+//List all the movies acted by John in the year 2018.
+db.movie.find({$and : [{act_n:"john"},{year:2018}]},{film:1}).pretty()
+{ "_id" : ObjectId("5c273f627fd87cec5944fac3"), "film" : "mr.bean" }
+//List only the actors names and type of the movie directed by Ram.
+db.movie.find({dir_n:"ram"},{act_n:1,type:1}).pretty()
+{
+"_id" : ObjectId("5c273e247fd87cec5944fabf"),
+"act_n" : "john",
+"type" : "killer"
+}
+{
+"_id" : ObjectId("5c273e2e7fd87cec5944fac0"),
+"act_n" : "elly",
+"type" : "action"
+}
+{
+"_id" : ObjectId("5c273f627fd87cec5944fac3"),
+"act_n" : "john",
+"type" : "comedy"
+}
+
+
+
+
+
+db.createCollection("movie")
+{ "ok" : 1 }
+db.movie.insert([{act_n:"ram",act_id:13,act_bdate:"2/3/1997",dir_n:"williams",dir_id:101,dir_bdat
+e:"12/9/1987",film:"battleship",year:2015,type:"thriller"}])
+db.movie.insert([{act_n:"john",act_id:11,act_bdate:"1/2/1998",dir_n:"ram",dir_id:100,dir_bdate:"2/
+3/1997",film:"john wick",year:2012,type:"killer"}])
+db.movie.insert([{act_n:"elly",act_id:12,act_bdate:"4/12/1998",dir_n:"ram",dir_id:100,dir_bdate:"2
+/3/1997",film:"aquaman",year:2012,type:"action"}])
+db.movie.insert([{act_n:"ram",act_id:13,act_bdate:"2/3/1997",dir_n:"thomas",dir_id:103,dir_bdate:
+"12/3/1999",film:"xxx",year:2018,type:"action"}])
+db.movie.insert([{act_n:"john",act_id:11,act_bdate:"1/2/1998",dir_n:"ram",dir_id:100,dir_bdate:"2/
+3/1997",film:"mr.bean",year:2018,type:"comedy"}])
+//List all the movies acted by John and Elly in the year 2012.
+db.movie.find({$and : [{act_n:{$in : ["john","elly"]}},{year:2012}]},{film:1}).pretty()
+{ "_id" : ObjectId("5c273e247fd87cec5944fabf"), "film" : "john wick" }
+{ "_id" : ObjectId("5c273e2e7fd87cec5944fac0"), "film" : "aquaman" }
+//ii. List only the name and type of the movie where Ram has acted sorted by movie names.
+db.movie.find({act_n:"ram"},{film:1,type:1}).sort({film:1}).pretty()
+{ "_id" : ObjectId("5c273ddb7fd87cec5944fabd"), "film" : "battleship", "type" : "thriller" }
+{ "_id" : ObjectId("5c273ef97fd87cec5944fac1"), "film" : "xxx", "type" : "action" }
+
+
+
+
+
+
+db.createCollection("movie")
+{ "ok" : 1 }
+db.movie.insert([{act_n:"ram",act_id:13,act_bdate:"2/3/1997",dir_n:"williams",dir_id:101,dir_bdat
+e:"12/9/1987",film:"battleship",year:2015,type:"thriller"}])
+db.movie.insert([{act_n:"john",act_id:11,act_bdate:"1/2/1998",dir_n:"ram",dir_id:100,dir_bdate:"2/
+3/1997",film:"john wick",year:2012,type:"killer"}])
+db.movie.insert([{act_n:"elly",act_id:12,act_bdate:"4/12/1998",dir_n:"ram",dir_id:100,dir_bdate:"2
+/3/1997",film:"aquaman",year:2012,type:"action"}])
+db.movie.insert([{act_n:"ram",act_id:13,act_bdate:"2/3/1997",dir_n:"thomas",dir_id:103,dir_bdate:
+"12/3/1999",film:"xxx",year:2018,type:"action"}])
+db.movie.insert([{act_n:"john",act_id:11,act_bdate:"1/2/1998",dir_n:"ram",dir_id:100,dir_bdate:"2/
+3/1997",film:"mr.bean",year:2018,type:"comedy"}])
+//List all the movies acted by John in the year 2018.
+db.movie.find({$and : [{act_n:"john"},{year:2018}]},{film:1}).pretty()
+{ "_id" : ObjectId("5c273f627fd87cec5944fac3"), "film" : "mr.bean" }
+//List only the actors names and type of the movie directed by Ram.
+db.movie.find({dir_n:"ram"},{act_n:1,type:1}).pretty()
+{
+"_id" : ObjectId("5c273e247fd87cec5944fabf"),
+"act_n" : "john",
+"type" : "killer"
+}
+{
+"_id" : ObjectId("5c273e2e7fd87cec5944fac0"),
+"act_n" : "elly",
+"type" : "action"
+}
+{
+"_id" : ObjectId("5c273f627fd87cec5944fac3"),
+"act_n" : "john",
+"type" : "comedy"
+}
+
+
+
+
+
+db.createCollection("movie")
+{ "ok" : 1 }
+db.movie.insert([{act_n:"ram",act_id:13,act_bdate:"2/3/1997",dir_n:"williams",dir_id:101,dir_bdat
+e:"12/9/1987",film:"battleship",year:2015,type:"thriller"}])
+db.movie.insert([{act_n:"john",act_id:11,act_bdate:"1/2/1998",dir_n:"ram",dir_id:100,dir_bdate:"2/
+3/1997",film:"john wick",year:2012,type:"killer"}])
+db.movie.insert([{act_n:"elly",act_id:12,act_bdate:"4/12/1998",dir_n:"ram",dir_id:100,dir_bdate:"2
+/3/1997",film:"aquaman",year:2012,type:"action"}])
+db.movie.insert([{act_n:"ram",act_id:13,act_bdate:"2/3/1997",dir_n:"thomas",dir_id:103,dir_bdate:
+"12/3/1999",film:"xxx",year:2018,type:"action"}])
+db.movie.insert([{act_n:"john",act_id:11,act_bdate:"1/2/1998",dir_n:"ram",dir_id:100,dir_bdate:"2/
+3/1997",film:"mr.bean",year:2018,type:"comedy"}])
+//List all the movies acted by John and Elly in the year 2012.
+db.movie.find({$and : [{act_n:{$in : ["john","elly"]}},{year:2012}]},{film:1}).pretty()
+{ "_id" : ObjectId("5c273e247fd87cec5944fabf"), "film" : "john wick" }
+{ "_id" : ObjectId("5c273e2e7fd87cec5944fac0"), "film" : "aquaman" }
+//ii. List only the name and type of the movie where Ram has acted sorted by movie names.
+db.movie.find({act_n:"ram"},{film:1,type:1}).sort({film:1}).pretty()
+{ "_id" : ObjectId("5c273ddb7fd87cec5944fabd"), "film" : "battleship", "type" : "thriller" }
+{ "_id" : ObjectId("5c273ef97fd87cec5944fac1"), "film" : "xxx", "type" : "action" }
