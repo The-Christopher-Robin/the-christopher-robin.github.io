@@ -1,5 +1,52 @@
-JSP
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Database Operations</title>
+</head>
+<body>
 
+<h2>Insert/Update Student</h2>
+<form action="NewFile.jsp" method="post">
+    <input type="hidden" name="operation" value="insert">
+    USN: <input type="text" name="usn" required>
+    Name: <input type="text" name="name" required>
+    <input type="submit" value="Insert">
+</form>
+
+<br>
+
+<h2>Delete Student</h2>
+<form action="NewFile.jsp" method="post">
+    <input type="hidden" name="operation" value="delete">
+    USN: <input type="text" name="usn" required>
+    <input type="submit" value="Delete">
+</form>
+
+<br>
+
+<h2>Extract Student Details</h2>
+<form action="NewFile.jsp" method="post">
+    <input type="hidden" name="operation" value="extract">
+    USN: <input type="text" name="usn" required>
+    <input type="submit" value="Extract">
+</form>
+
+<br>
+
+<h2>Update Student Name</h2>
+<form action="NewFile.jsp" method="post">
+    <input type="hidden" name="operation" value="update">
+    USN: <input type="text" name="usn" required>
+    New Name: <input type="text" name="name" required>
+    <input type="submit" value="Update">
+</form>
+
+</body>
+</html>
+
+
+
+JSP FILE 
 
 <%@ page import="java.sql.*" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -11,7 +58,7 @@ JSP
 </head>
 <body>
 
-<%..
+<%
     String operation = request.getParameter("operation");
     String usn = request.getParameter("usn");
 
@@ -95,57 +142,6 @@ JSP
         e.printStackTrace();
     }
 %>
-
-</body>
-</html>
-
-
-html
-
-HTML FILE 
-
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Student Database Operations</title>
-</head>
-<body>
-
-<h2>Insert/Update Student</h2>
-<form action="NewFile.jsp" method="post">
-    <input type="hidden" name="operation" value="insert">
-    USN: <input type="text" name="usn" required>
-    Name: <input type="text" name="name" required>
-    <input type="submit" value="Insert">
-</form>
-
-<br>
-
-<h2>Delete Student</h2>
-<form action="NewFile.jsp" method="post">
-    <input type="hidden" name="operation" value="delete">
-    USN: <input type="text" name="usn" required>
-    <input type="submit" value="Delete">
-</form>
-
-<br>
-
-<h2>Extract Student Details</h2>
-<form action="NewFile.jsp" method="post">
-    <input type="hidden" name="operation" value="extract">
-    USN: <input type="text" name="usn" required>
-    <input type="submit" value="Extract">
-</form>
-
-<br>
-
-<h2>Update Student Name</h2>
-<form action="NewFile.jsp" method="post">
-    <input type="hidden" name="operation" value="update">
-    USN: <input type="text" name="usn" required>
-    New Name: <input type="text" name="name" required>
-    <input type="submit" value="Update">
-</form>
 
 </body>
 </html>
