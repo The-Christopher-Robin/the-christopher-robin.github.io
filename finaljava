@@ -1,0 +1,1163 @@
+1A
+
+
+
+JAVA Project -> class
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class adv1a {
+
+    public static void main(String[] args) {
+    	
+    	String url = "jdbc:mysql://localhost:4307/javalab";
+        String user = "root";
+        String pw = "";
+        try {
+            // Load the JDBC driver
+            Class.forName("com.mysql.jdbc.Driver");
+
+            // Connect to the database
+            Connection conn = DriverManager.getConnection(url, user, pw);
+
+            // Display details of all employees
+            displayAllEmployees(conn);
+
+            // Display details of employees working on the "Web Development" project
+            displayEmployeesByProject(conn);
+
+            // Close the connection
+            conn.close();
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void displayAllEmployees(Connection conn) throws SQLException {
+        System.out.println("Details of all employees:");
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM Employee");
+        ResultSet rs = ps.executeQuery(); 
+
+            while (rs.next()) {
+            	int id = rs.getInt("ID");
+                String firstName = rs.getString("FName");
+                String lastName = rs.getString("LName");
+                String project = rs.getString("Project");
+                int salary = rs.getInt("Salary");
+
+                System.out.println("Employee ID: " + id + ", Name: " + firstName + " " + lastName +
+                        ", Project: " + project + ", Salary: $" + salary);
+            }
+        
+        System.out.println();
+    }
+
+    private static void displayEmployeesByProject(Connection connection) throws SQLException {
+    	 System.out.println("Details of employees working on project 'Web Development':");
+         PreparedStatement ps1 = connection.prepareStatement("SELECT * FROM Employee WHERE Project ='Web Developement'");
+         ResultSet rs1 = ps1.executeQuery(); 
+
+            while (rs1.next()) {
+            	int id = rs1.getInt("ID");
+                String firstName = rs1.getString("FName");
+                String lastName = rs1.getString("LName");
+                String project = rs1.getString("Project");
+                int salary = rs1.getInt("Salary");
+
+                System.out.println("Employee ID: " + id + ", Name: " + firstName + " " + lastName +
+                        ", Project: " + project + ", Salary: $" + salary);
+               
+            }
+        }
+}
+
+
+
+
+---------------------
+
+
+
+
+1B
+
+Servlet:
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/payrollservlet")
+public class payrollservlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+    	
+    	response.setContentType("text/html");
+    	PrintWriter out = response.getWriter();
+    	
+        // Read employee information from the request
+        String employeeName = request.getParameter("employeeName");
+        double hoursWorked = Double.parseDouble(request.getParameter("hoursWorked"));
+        double hourlyPayRate = Double.parseDouble(request.getParameter("hourlyPayRate"));
+        double taxRate = Double.parseDouble(request.getParameter("taxRate"));
+
+        // Calculate gross pay, tax amount, and net pay
+        double grossPay = hoursWorked * hourlyPayRate;
+        double taxAmount = (grossPay * taxRate) / 100;
+        double netPay = grossPay - taxAmount;
+        
+
+        // Print the payroll statement
+        out.println("<html><head><title>Payroll Statement</title></head><body>");
+        out.println("<h2>Payroll Statement</h2>");
+        out.println("<p>Employee Name: " + employeeName + "</p>");
+        out.println("<p>Hours Worked: " + hoursWorked + " hours</p>");
+        out.println("<p>Hourly Pay Rate: $" + hourlyPayRate + "</p>");
+        out.println("<p>Gross Pay: $" + grossPay + "</p>");
+        out.println("<p>Tax Rate: " + taxRate + "%</p>");
+        out.println("<p>Tax Amount: $" + taxAmount + "</p>");
+        out.println("<p>Net Pay: $" + netPay + "</p>"); 
+        out.println("</body></html>");
+
+   
+    }
+}
+
+
+
+HTML:
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Payroll Form</title>
+</head>
+<body>
+    <h2>Employee Payroll Form</h2>
+
+    <form action="payrollservlet" method="post">
+        <label for="employeeName">Employee Name:</label>
+        <input type="text" id="employeeName" name="employeeName" required><br>
+
+        <label for="hoursWorked">Hours Worked:</label>
+        <input type="number" id="hoursWorked" name="hoursWorked" required><br>
+
+        <label for="hourlyPayRate">Hourly Pay Rate:</label>
+        <input type="number" id="hourlyPayRate" name="hourlyPayRate" required><br>
+
+        <label for="taxRate">Tax Rate (%):</label>
+        <input type="number" id="taxRate" name="taxRate" required><br>
+
+        <input type="submit" value="Generate Payroll Statement">
+    </form>
+</body>
+</html>
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+2A  
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class SEE2A{
+
+   
+
+    public static void main(String[] args) {
+    	 String url= "jdbc:mysql://localhost:3306/javalab";
+    	 String user = "root";
+         String pw = "";
+        try {
+            // Load the JDBC driver
+            Class.forName("com.mysql.jdbc.Driver");
+
+            // Connect to the database
+            Connection conn= DriverManager.getConnection(url,user,pw);
+
+            // Insert a new department
+            insertNewDepartment(conn);
+
+            // Display details of all departments
+            displayAllDepartments(conn);
+
+            // Close the connection
+            conn.close();
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void insertNewDepartment(Connection conn) throws SQLException {
+       
+            // Insert a new department using Prepared Statement
+            String sql = "INSERT INTO Department (Dept_ID, Name, Year_Established, Head_Name, No_of_Employees) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            // Set values for the new department
+            ps.setInt(1, 101); 
+            ps.setString(2, "New Department"); 
+            ps.setInt(3, 2023); 
+            ps.setString(4, "New Head"); 
+            ps.setInt(5, 10);
+
+            // Execute the insert query
+            int rowsInserted = ps.executeUpdate();
+            System.out.println(rowsInserted + " department(s) inserted.");
+        
+    }
+
+    private static void displayAllDepartments(Connection conn) throws SQLException {
+        System.out.println("Details of all departments:");
+        String sql="select * from Department";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+            	int deptID = rs.getInt("Dept_ID");
+                String name = rs.getString("Name");
+                int yearEstablished = rs.getInt("Year_Established");
+                String headName = rs.getString("Head_Name");
+                int noOfEmployees = rs.getInt("No_of_Employees");
+
+                System.out.println("Department ID: " + deptID + ", Name: " + name +
+                        ", Year Established: " + yearEstablished + ", Head Name: " + headName +
+                        ", No of Employees: " + noOfEmployees);
+            }
+        }
+}
+
+
+
+
+----------------------------------------------------------------------------------------------------------
+
+2B
+
+JSP: NumberAnalysis.jsp
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.Set, java.util.HashSet" %>
+
+
+<html>
+<head>
+    <title>Number Analysis</title>
+</head>
+<body>
+
+<%
+    // Create an array to store the entered numbers
+    int[] numbers = new int[11];
+
+    // Read eleven numbers from the user and populate the array
+    for (int i = 0; i < 11; i++) {
+        numbers[i] = Integer.parseInt(request.getParameter("num" + (i + 1)));
+    }
+
+    // Calculate average
+    double sum = 0;
+    for (int num : numbers) {
+        sum += num;
+    }
+    double average = sum / 11.0;
+
+    // Find numbers below average
+    int belowAverageCount = 0;
+    for (int num : numbers) {
+        if (num < average) {
+            belowAverageCount++;
+        }
+    }
+
+    // Find duplicate numbers
+    Set<Integer> uniqueNumbers = new HashSet<>();
+    Set<Integer> duplicateNumbers = new HashSet<>();
+    for (int num : numbers) {
+        if (!uniqueNumbers.add(num)) {
+            duplicateNumbers.add(num);
+        }
+    }
+%>
+
+<h2>Number Analysis Results:</h2>
+<p>Average: <%= average %></p>
+<p>Numbers below average: <%= belowAverageCount %></p>
+<p>Duplicate numbers: <%= duplicateNumbers %></p>
+
+</body>
+</html>
+
+
+HTML file: 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Analysis Form</title>
+</head>
+<body>
+
+
+<form action="NumberAnalysis.jsp" method="post">
+Enter Number 1 : <input type="text" name="num1"><br>
+Enter Number 2 : <input type="text" name="num2"><br>
+Enter Number 3 : <input type="text" name="num3"><br>
+Enter Number 4 : <input type="text" name="num4"><br>
+Enter Number 5 : <input type="text" name="num5"><br>
+Enter Number 6 : <input type="text" name="num6"><br>
+Enter Number 7 : <input type="text" name="num7"><br>
+Enter Number 8 : <input type="text" name="num8"><br>
+Enter Number 9 : <input type="text" name="num9"><br>
+Enter Number 10 : <input type="text" name="num10"><br>
+Enter Number 11 : <input type="text" name="num11"><br>
+
+ <input type="submit" value="Submit">
+</form>
+<br>
+
+</body>
+</html>
+---------------------------------------------------------------------------------------------
+3A
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class third {
+
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3306/javalab";
+        String user = "root";
+        String password = "";
+
+        try {
+            // Load the JDBC driver
+            Class.forName("com.mysql.jdbc.Driver");
+
+            // Connect to the database
+            Connection connection = DriverManager.getConnection(url, user, password);
+
+            // Display details of all movies
+            displayAllMovies(connection);
+
+            // Display details of the 5th movie
+            displaySpecificMovie(connection, 5);
+
+            // Close the connection
+            connection.close();
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void displayAllMovies(Connection connection) throws SQLException {
+        System.out.println("Details of all movies:");
+
+        // Create the PreparedStatement outside of try-with-resources
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Movies");
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        while (resultSet.next()) {
+            int id = resultSet.getInt("ID");
+            String movieName = resultSet.getString("Movie_Name");
+            String genre = resultSet.getString("Genre");
+            double imdbRating = resultSet.getDouble("IMDB_Rating");
+            int year = resultSet.getInt("Year");
+
+            System.out.println("Movie ID: " + id + ", Name: " + movieName +
+                    ", Genre: " + genre + ", IMDB Rating: " + imdbRating + ", Year: " + year);
+        }
+
+        // Close the resources explicitly
+        resultSet.close();
+        preparedStatement.close();
+
+        System.out.println();
+    }
+
+    private static void displaySpecificMovie(Connection connection, int movieId) throws SQLException {
+        System.out.println("Details of the 5th movie:");
+
+        // Create the PreparedStatement outside of try-with-resources
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Movies WHERE ID = ?");
+        preparedStatement.setInt(1, movieId);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+            int id = resultSet.getInt("ID");
+            String movieName = resultSet.getString("Movie_Name");
+            String genre = resultSet.getString("Genre");
+            double imdbRating = resultSet.getDouble("IMDB_Rating");
+            int year = resultSet.getInt("Year");
+
+            System.out.println("Movie ID: " + id + ", Name: " + movieName +
+                    ", Genre: " + genre + ", IMDB Rating: " + imdbRating + ", Year: " + year);
+        } else {
+            System.out.println("Movie with ID " + movieId + " not found.");
+        }
+
+        // Close the resources explicitly
+        resultSet.close();
+        preparedStatement.close();
+
+        System.out.println();
+    }
+}
+
+--------------------------------------------------------------------------------------------
+3B
+
+SERVLET: 
+
+
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/voting")
+public class voting extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Read user information from the request
+    	response.setContentType("text/html");
+    	PrintWriter out = response.getWriter();
+    	
+        String userName = request.getParameter("userName");
+        String gender = request.getParameter("gender");
+        int age = Integer.parseInt(request.getParameter("age"));
+
+        // Determine voting eligibility
+        boolean isEligible = age >= 18;
+
+        // Print the eligibility result
+        out.println("<html><head><title>Voting Eligibility</title></head><body>");
+        out.println("<h2>Voting Eligibility</h2>");
+        out.println("<p>User Name: " + userName + "</p>");
+        out.println("<p>Gender: " + gender + "</p>");
+        out.println("<p>Age: " + age + "</p>");
+
+        if (isEligible) {
+            out.println("<p>You are eligible to vote.</p>");
+        } else {
+            out.println("<p>Sorry, you are not eligible to vote yet.</p>");
+        }
+
+        out.println("</body></html>");
+
+    }
+}
+
+
+
+
+
+
+HTML:
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting Eligibility Form</title>
+</head>
+<body>
+    <h2>Voting Eligibility Form</h2>
+
+    <form action="voting" method="post">
+        <label for="userName">User Name:</label>
+        <input type="text" id="userName" name="userName" required><br>
+
+        <label for="gender">Gender:</label>
+        <input type="text" id="gender" name="gender" required><br>
+
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" required><br>
+
+        <input type="submit" value="Check Eligibility">
+    </form>
+</body>
+</html>
+
+-----------------------------------------------------------------------------------------
+4A
+
+import java.sql.*;
+import java.util.Scanner;
+
+public class fourth {
+    public static void main(String args[]) {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/javalab", "root", "");
+            Statement stmt = conn.createStatement();
+
+            // Create the database if it doesn't exist
+            String createDB = "CREATE DATABASE IF NOT EXISTS countries";
+            stmt.executeUpdate(createDB);
+
+            // Use the countries database
+            String useDB = "USE countries";
+            stmt.executeUpdate(useDB);
+
+            // Create the table if it doesn't exist
+            String createTB = "CREATE TABLE IF NOT EXISTS country (code VARCHAR(30) PRIMARY KEY, capital VARCHAR(30), continent VARCHAR(30), population VARCHAR(30))";
+            stmt.executeUpdate(createTB);
+
+            // Prepare statement for insertion
+            String ins = "INSERT INTO country VALUES (?, ?, ?, ?)";
+            PreparedStatement ps = conn.prepareStatement(ins);
+
+            Scanner sc = new Scanner(System.in);
+
+            do {
+                String code, capital, continent, population;
+                System.out.println("Insert the details");
+                code = sc.next();
+                capital = sc.next();
+                continent = sc.next();
+                population = sc.next();
+
+                ps.setString(1, code);
+                ps.setString(2, capital);
+                ps.setString(3, continent);
+                ps.setString(4, population);
+
+                int n = ps.executeUpdate();
+                if (n > 0) {
+                    System.out.println("Inserted Successfully");
+                } else {
+                    System.out.println("Not Successful");
+                }
+
+                System.out.println("Do you want to continue? (y/n)");
+                String head = sc.next();
+                if (head.charAt(0) == 'n') {
+                    break;
+                }
+
+            } while (true);
+
+            // Display all records
+            String disp = "SELECT * FROM country";
+            ResultSet rs = stmt.executeQuery(disp);
+            while (rs.next()) {
+                String f1 = rs.getString(1);
+                String f2 = rs.getString(2);
+                String f3 = rs.getString(3);
+                String f4 = rs.getString(4);
+                
+                System.out.println(f1 + "\t" + f2 + "\t" + f3 + "\t" + f4 );
+            }
+
+            // Display records ordered by population
+            disp = "SELECT * FROM country ORDER BY population";
+            rs = stmt.executeQuery(disp);
+
+            while (rs.next()) {
+                String f1 = rs.getString(1);
+                String f2 = rs.getString(2);
+                String f3 = rs.getString(3);
+                String f4 = rs.getString(4);
+   
+                System.out.println(f1 + "\t" + f2 + "\t" + f3 + "\t" + f4 );
+            }
+
+            // Close resources
+            sc.close();
+            stmt.close();
+            ps.close();
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+-----------------------------------------------------------------------------
+4B
+
+JSP: ArmstrongChecker.jsp
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<html>
+<head>
+    <title>Armstrong Number Checker</title>
+</head>
+<body>
+
+<%
+    // Get the number from the user (assuming it's passed as a parameter)
+    int number = Integer.parseInt(request.getParameter("number"));
+
+    // Calculate the sum of cubes of digits
+    int originalNumber = number;
+    int sum = 0;
+
+    while (number > 0) {
+        int digit = number % 10;
+        sum += Math.pow(digit, 3);
+        number /= 10;
+    }
+
+    // Check if the number is an Armstrong number
+    boolean isArmstrong = (sum == originalNumber);
+%>
+
+<h2>Armstrong Number Checker</h2>
+<p>Entered Number: <%= originalNumber %></p>
+<p>Sum of Cubes of Digits: <%= sum %></p>
+
+<%
+    if (isArmstrong) {
+%>
+        <p><strong><%= originalNumber %> is an Armstrong number.</strong></p>
+<%
+    } else {
+%>
+        <p><strong><%= originalNumber %> is not an Armstrong number.</strong></p>
+<%
+    }
+%>
+
+</body>
+</html>
+
+
+HTML file:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Armstrong Number Checker</title>
+</head>
+<body>
+
+<form action="ArmstrongChecker.jsp" method="post">
+    Enter a number: <input type="text" name="number" required>
+    <input type="submit" value="Check">
+</form>
+
+</body>
+</html>
+----------------------------------------------------------------------------
+
+5B
+
+Servlet: CheckEligibilityservlet
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+@WebServlet("/CheckEligibilityServlet")
+public class CheckEligibilityServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Set the content type of the response
+        response.setContentType("text/html");
+        
+        // Create a PrintWriter to write HTML response
+        PrintWriter out = response.getWriter();
+
+        // Read user inputs from the form
+        String firstName = request.getParameter("firstName");
+        String lastName = request.getParameter("lastName");
+        String email = request.getParameter("email");
+        String dobString = request.getParameter("dob");
+
+        // Validate the input fields
+        if (firstName == null || lastName == null || email == null || dobString == null
+                || firstName.trim().isEmpty() || lastName.trim().isEmpty() || email.trim().isEmpty()
+                || dobString.trim().isEmpty()) {
+            out.println("<html><body><h2>Please fill in all the fields.</h2></body></html>");
+            return;
+        }
+
+        // Parse and validate the date of birth
+        Date dob = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            dob = sdf.parse(dobString);
+        } catch (ParseException e) {
+            out.println("<html><body><h2>Invalid date of birth format.</h2></body></html>");
+            return;
+        }
+
+        // Check eligibility (considering a voter must be at least 18 years old)
+        Date currentDate = new Date();
+        long ageInMillis = currentDate.getTime() - dob.getTime();
+        long ageInYears = ageInMillis / (1000L * 60 * 60 * 24 * 365);
+
+        if (ageInYears >= 18) {
+            // Eligible to vote
+            out.println("<html><body><h2>Eligibility Check</h2>");
+            out.println("<p>Name: " + firstName + " " + lastName + "</p>");
+            out.println("<p>Email: " + email + "</p>");
+            out.println("<p>Date of Birth: " + dobString + "</p>");
+            out.println("<p><strong>Congratulations! You are eligible to vote.</strong></p></body></html>");
+        } else {
+            // Not eligible to vote
+            out.println("<html><body><h2>Eligibility Check</h2>");
+            out.println("<p>Name: " + firstName + " " + lastName + "</p>");
+            out.println("<p>Email: " + email + "</p>");
+            out.println("<p>Date of Birth: " + dobString + "</p>");
+            out.println("<p>Sorry, you are not eligible to vote. You must be at least 18 years old.</p></body></html>");
+        }
+    }
+}
+
+HTML file:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voter Eligibility Check</title>
+</head>
+<body>
+
+<form action="CheckEligibilityServlet" method="post">
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" name="firstName" required><br>
+
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" name="lastName" required><br>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br>
+
+    <label for="dob">Date of Birth:</label>
+    <input type="date" id="dob" name="dob" required><br>
+
+    <input type="submit" value="Check Eligibility">
+</form>
+
+</body>
+</html>
+-------------------------------------------------------------------------
+6B
+
+Servlet: CalculateCGPA
+
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+@WebServlet("/CalculateCGPA")
+public class CalculateCGPA extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
+        try {
+            // Retrieve data from the HTML form
+            String usn = request.getParameter("usn");
+            String name = request.getParameter("name");
+            double sgpa1 = Double.parseDouble(request.getParameter("sgpa1"));
+            double sgpa2 = Double.parseDouble(request.getParameter("sgpa2"));
+            double sgpa3 = Double.parseDouble(request.getParameter("sgpa3"));
+            double sgpa4 = Double.parseDouble(request.getParameter("sgpa4"));
+
+            // Calculate CGPA
+            double cgpa = (sgpa1 + sgpa2 + sgpa3 + sgpa4) / 4;
+
+            // Display the result
+            out.println("<html>");
+            out.println("<head><title>CGPA Result</title></head>");
+            out.println("<body>");
+            out.println("<h2>CGPA Calculation Result</h2>");
+            out.println("<p>USN: " + usn + "</p>");
+            out.println("<p>Name: " + name + "</p>");
+            out.println("<p>CGPA: " + cgpa + "</p>");
+            out.println("</body>");
+            out.println("</html>");
+
+        } catch (NumberFormatException e) {
+            out.println("<html>");
+            out.println("<head><title>Error</title></head>");
+            out.println("<body>");
+            out.println("<h2>Error: Please enter valid SGPA values.</h2>");
+            out.println("</body>");
+            out.println("</html>");
+        } finally {
+            out.close();
+        }
+    }
+}
+
+HTML file:
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CGPA Calculator</title>
+</head>
+<body>
+    <h2>Enter Details for CGPA Calculation</h2>
+    <form action="CalculateCGPA" method="post">
+        <label for="usn">USN:</label>
+        <input type="text" name="usn" required><br>
+
+        <label for="name">Name:</label>
+        <input type="text" name="name" required><br>
+
+        <label for="sgpa1">SGPA Semester 1:</label>
+        <input type="text" name="sgpa1" required><br>
+
+        <label for="sgpa2">SGPA Semester 2:</label>
+        <input type="text" name="sgpa2" required><br>
+
+        <label for="sgpa3">SGPA Semester 3:</label>
+        <input type="text" name="sgpa3" required><br>
+
+        <label for="sgpa4">SGPA Semester 4:</label>
+        <input type="text" name="sgpa4" required><br>
+
+        <input type="submit" value="Calculate CGPA">
+    </form>
+</body>
+</html>
+
+---------------------------------------------------------------
+7B
+
+JSP file: updateSalary.jsp
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Salary Update Result</title>
+</head>
+<body>
+
+    <h2>Salary Update Result</h2>
+
+    <%-- Retrieve form data --%>
+    <% String empId = request.getParameter("empId"); %>
+    <% String empName = request.getParameter("empName"); %>
+    <% double salary = Double.parseDouble(request.getParameter("salary")); %>
+
+    <%-- Update salary if it's less than 20,000 --%>
+    <% 
+       double updatedSalary = salary;
+       if (salary < 20000) {
+           updatedSalary = salary * 1.10;  // Increase by 10%
+       }
+    %>
+
+    <%-- Display employee details and updated salary --%>
+    <p>Employee ID: <%= empId %></p>
+    <p>Employee Name: <%= empName %></p>
+    <p>Original Salary: <%= salary %></p>
+    <p>Updated Salary: <%= updatedSalary %></p>
+
+</body>
+</html>
+
+HTML file:
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Details</title>
+</head>
+<body>
+
+    <h2>Employee Details</h2>
+
+    <form action="updateSalary.jsp" method="post">
+        <label for="empId">Employee ID:</label>
+        <input type="text" name="empId" required><br>
+
+        <label for="empName">Employee Name:</label>
+        <input type="text" name="empName" required><br>
+
+        <label for="salary">Salary:</label>
+        <input type="text" name="salary" required><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+</body>
+</html>
+-------------------------------------------------------------------------
+
+8B
+
+CookieServlet
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+@WebServlet("/CookieServlet")
+public class CookieServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
+        try {
+            // Create cookies
+            Cookie cookie1 = new Cookie("cookie1", "Value1");
+            Cookie cookie2 = new Cookie("cookie2", "Value2");
+            Cookie cookie3 = new Cookie("cookie3", "Value3");
+            Cookie cookie4 = new Cookie("cookie4", "Value4");
+
+            // Set expiry for first two cookies (1 minute)
+            cookie1.setMaxAge(60);
+            cookie2.setMaxAge(60);
+
+            // Add cookies to the response
+            response.addCookie(cookie1);
+            response.addCookie(cookie2);
+            response.addCookie(cookie3);
+            response.addCookie(cookie4);
+
+            // Display all cookies when the servlet is loaded for the first time
+            out.println("<html>");
+            out.println("<head><title>Cookie Example</title></head>");
+            out.println("<body>");
+            out.println("<h2>All Cookies:</h2>");
+            displayCookies(request, out);
+            out.println("<p>Refresh the page to see the remaining cookies.</p>");
+            out.println("</body>");
+            out.println("</html>");
+
+        } finally {
+            out.close();
+        }
+    }
+
+    private void displayCookies(HttpServletRequest request, PrintWriter out) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                out.println("<p>" + cookie.getName() + ": " + cookie.getValue() + "</p>");
+            }
+        } else {
+            out.println("<p>No cookies found.</p>");
+        }
+    }
+}
+
+
+-------------------------------------------------------------------------
+
+9B
+
+JSP file: calculateGrade.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Grade Calculation Result</title>
+</head>
+<body>
+
+    <h2>Grade Calculation Result</h2>
+
+    <%-- Retrieve form data --%>
+    <% int subject1 = Integer.parseInt(request.getParameter("subject1")); %>
+    <% int subject2 = Integer.parseInt(request.getParameter("subject2")); %>
+    <% int subject3 = Integer.parseInt(request.getParameter("subject3")); %>
+    <% int subject4 = Integer.parseInt(request.getParameter("subject4")); %>
+    <% int javaMarks = Integer.parseInt(request.getParameter("javaMarks")); %>
+
+    <%-- Calculate total percentage --%>
+    <% double totalMarks = subject1 + subject2 + subject3 + subject4 + javaMarks; %>
+    <% double percentage = totalMarks / 5; %>
+
+    <%-- Determine grade for Java subject --%>
+<%
+   String javaGrade = "";
+   if (javaMarks > 90) {
+       javaGrade = "S";
+   } else if (javaMarks >= 80) {
+       javaGrade = "A";
+   } else if (javaMarks >= 70) {
+       javaGrade = "B";
+   } else if (javaMarks >= 60) {
+       javaGrade = "C";
+   } else if (javaMarks >= 50) {
+       javaGrade = "D";
+   } else {
+       javaGrade = "FAIL";
+   }
+%>
+
+
+    <%-- Display result --%>
+    <p>Total Percentage: <%= percentage %></p>
+    <p>Grade for Java: <%= javaGrade %></p>
+
+</body>
+</html>
+
+
+HTML file:
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Subject Marks and Grade</title>
+</head>
+<body>
+
+    <h2>Subject Marks and Grade</h2>
+
+    <form action="calculateGrade.jsp" method="post">
+        <label for="subject1">Subject 1:</label>
+        <input type="number" name="subject1" required><br>
+
+        <label for="subject2">Subject 2:</label>
+        <input type="number" name="subject2" required><br>
+
+        <label for="subject3">Subject 3:</label>
+        <input type="number" name="subject3" required><br>
+
+        <label for="subject4">Subject 4:</label>
+        <input type="number" name="subject4" required><br>
+
+        <label for="javaMarks">Java Marks:</label>
+        <input type="number" name="javaMarks" required><br>
+
+        <input type="submit" value="Calculate Grade">
+    </form>
+
+</body>
+</html>
+
+--------------------------------------------------------------
+10B
+
+JSP file: movieTicket.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Ticket Price</title>
+</head>
+<body>
+
+    <h2>Movie Ticket Price Calculator</h2>
+
+    <%-- Retrieve form data --%>
+    <% String name = request.getParameter("name"); %>
+    <% int age = Integer.parseInt(request.getParameter("age")); %>
+
+    <%-- Calculate ticket price based on age --%>
+    <% 
+       int ticketPrice;
+       if (age > 62) {
+           ticketPrice = 50;
+       } else if (age < 10) {
+           ticketPrice = 30;
+       } else {
+           ticketPrice = 80;
+       }
+    %>
+
+    <%-- Display result --%>
+    <h3>Ticket Price Result:</h3>
+    <p>Name: <%= name %></p>
+    <p>Age: <%= age %></p>
+    <p>Ticket Price: Rs. <%= ticketPrice %></p>
+
+</body>
+</html>
+
+HTML file:
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movie Ticket Form</title>
+</head>
+<body>
+
+    <h2>Enter Your Details</h2>
+
+    <form action="movieTicket.jsp" method="post">
+        <label for="name">Name:</label>
+        <input type="text" name="name" required><br>
+
+        <label for="age">Age:</label>
+        <input type="number" name="age" required><br>
+
+        <input type="submit" value="Calculate Ticket Price">
+    </form>
+
+</body>
+</html>
+---------------------------------------------------------------------------
+
