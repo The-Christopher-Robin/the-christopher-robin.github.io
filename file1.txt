@@ -4,7 +4,7 @@
 #include<unistd.h>
 int main(){
 int fd = open("file.txt", O_RDONLY);
-int size lseek(fd, 0, SEEK_END);
+int size = lseek(fd, 0, SEEK_END);
 char ch;
 while (size--) {
 lseek(fd, size, SEEK_SET);
