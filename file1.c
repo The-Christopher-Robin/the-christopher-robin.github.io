@@ -231,11 +231,6 @@ int main(int argc, char *argv[], char *envp[]) {
 #include <utime.h>
 
 int main(int argc, char *argv[]) {
-    if (argc != 3) {
-        fprintf(stderr, "Usage: %s <source_file> <destination_file>\n", argv[0]);
-        return 1;
-    }
-
     struct stat source_stat;
     if (stat(argv[1], &source_stat) == -1) {
         perror("stat");
