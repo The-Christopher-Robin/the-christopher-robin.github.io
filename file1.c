@@ -232,18 +232,12 @@ int main(int argc, char *argv[], char *envp[]) {
 
 int main(int argc, char *argv[]) {
     struct stat source_stat;
-    if (stat(argv[1], &source_stat) == -1) {
-        perror("stat");
-        return 1;
-    }
+
+    stat(argv[1], &source_stat);
 
     struct utimbuf times = {source_stat.st_atime, source_stat.st_mtime};
-    if (utime(argv[2], &times) == -1) {
-        perror("utime");
-        return 1;
-    }
-
-    printf("Access and modification times copied from %s to %s\n", argv[1], argv[2]);
+    utime(argv[2], &times);
+printf("Access and modification times copied from %s to %s\n", argv[1], argv[2]);
     return 0;
 }
 
