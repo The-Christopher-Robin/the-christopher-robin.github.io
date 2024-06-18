@@ -675,7 +675,26 @@ int main(){
 
 
 
+destination.txt
+This is a test file for copying. Hello
 
+example.txt
+Hello
+
+source.txt
+This is a test file for copying. Hello
+
+test.txt
+Lorem epsum yayyy
+
+test2.txt
+Hello i am in CSE
+
+test3.txt
+This is a test file. It contains more than 100 bytes of data for testing purposes. Ensure it has enough content to be read.
+
+testfile.txt
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit.
 
 
 #include<stdlib.h>
