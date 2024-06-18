@@ -56,24 +56,26 @@ return 0;
 2b
 #include <stdio.h>
 #include <fcntl.h>
-#include<stdlib.h>
+#include <stdlib.h>
+
 void printFlags(int fd) {
-int flags = fcntl(fd, F_GETFL);
-printf("File flags for descriptor %d:\n", fd);
-printf("O_APPEND: %s\n", (flags & O_APPEND) ? "Yes" : "No");
-printf("O_NONBLOCK: %s\n", (flags & O_NONBLOCK) ? "Yes" : "No");
-printf("O_SYNC: %s\n", (flags & O_SYNC) ? "Yes" : "No");
-// Add more flags as needed
+    int flags = fcntl(fd, F_GETFL);
+    printf("File flags for descriptor %d:\n", fd);
+    printf("O_APPEND: %s\n", (flags & O_APPEND) ? "Yes" : "No");
+    printf("O_NONBLOCK: %s\n", (flags & O_NONBLOCK) ? "Yes" : "No");
+    printf("O_SYNC: %s\n", (flags & O_SYNC) ? "Yes" : "No");
 }
+
 int main(int argc, char *argv[]) {
-if (argc != 2) {
-printf("Usage: %s <file descriptor>\n", argv[0]);
-return 1;
+    if (argc == 2) {
+        printFlags(atoi(argv[1]));
+    } else {
+        printf("Usage: %s <file descriptor>\n", argv[0]);
+        return 1;
+    }
+    return 0;
 }
-int fd = atoi(argv[1]);
-printFlags(fd);
-return 0;
-}
+
 
 3a
 #include <stdio.h>
