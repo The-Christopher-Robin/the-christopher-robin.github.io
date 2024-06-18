@@ -393,9 +393,100 @@ int main(int argc, char *argv[])
     return 0;
 }
 
+7a
+#include<stdio.h>
+#include<fcntl.h>
+#include<unistd.h>
+#include<setjmp.h>
+jmp_buf buf;
+int main(){
+volatile int x = 10;
+register int y = 50;
+printf("before jmp functions");
+printf("x and y values %d %d\n ",x,y);
+if(setjmp(buf)!=0){
+printf("x and y values after jump functions: %d %d\n ",x,y);
+return 0;
+}
+x=30;
+y=40;
+longjmp(buf, 1);
+}
 
+7b
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+int main(int argc, char *argv[]) {
+int src = open(argv[1], O_RDONLY);
+int dest = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+char buffer[4096];
+ssize_t bytesRead;
+while ((bytesRead = read(src, buffer, sizeof(buffer))) > 0) {
+write(dest, buffer, bytesRead);
+}
+close(src);
+close(dest);
+return 0;
+}
 
+8a
+#include<stdio.h>
+#include<fcntl.h>
+#include<unistd.h>
+#include<sys/stat.h>
+#include<dirent.h>
+int main(){
+DIR *dir;
+struct dirent *entry;
+struct stat fs;
+dir = opendir(".");
+while((entry = readdir(dir))!=NULL){
+stat(entry->d_name,&fs);
+if(fs.st_size == 0){
+printf("removing file : %s\n",entry->d_name);
+remove(entry->d_name);
+}
+}
+return 0;}
 
+8b
+#include<stdio.h>
+#include<unistd.h>
+#include<fcntl.h>
+#include<sys/wait.h>
+int main(){
+int pid = fork();
+if(pid<0){
+printf("error");
+}
+else if(pid == 0){
+printf("child process execution started ids are (PID: %d, PPID: %d)\n",getpid(),
+getppid());
+const char * fp = "file.txt";
+if(access(fp,F_OK)==0){
+printf("child process can access file1.txt");
+}
+if (access(fp, R_OK) == 0) {
+printf("Child Process: File %s is readable.\n", fp);}
+}
+else{
+wait(NULL);
+printf("Parent Process (PID: %d): Child process (PID: %d) exited.\n", getpid(), pid);
+}
+return 0;
+}
+
+CODE2/dest.txt
+kri
+CODE2/file.txt
+hello
+CODE2/file1.txt
+CODE2/source.txt
+kri
+CODE2/test.txt
+Lorem epsum yayyy
 
 
 
