@@ -233,33 +233,25 @@ int main(int argc, char *argv[], char *envp[]) {
 int main(int argc, char *argv[]) {
     if (argc != 3) {
         fprintf(stderr, "Usage: %s <source_file> <destination_file>\n", argv[0]);
-        exit(EXIT_FAILURE);
+        return 1;
     }
-
-    const char *source_file = argv[1];
-    const char *dest_file = argv[2];
 
     struct stat source_stat;
-    struct utimbuf times;
-
-    // Get the access and modification times of the source file
-    if (stat(source_file, &source_stat) == -1) {
+    if (stat(argv[1], &source_stat) == -1) {
         perror("stat");
-        exit(EXIT_FAILURE);
+        return 1;
     }
 
-    // Copy access and modification times to the destination file
-    times.actime = source_stat.st_atime;
-    times.modtime = source_stat.st_mtime;
-    if (utime(dest_file, &times) == -1) {
+    struct utimbuf times = {source_stat.st_atime, source_stat.st_mtime};
+    if (utime(argv[2], &times) == -1) {
         perror("utime");
-        exit(EXIT_FAILURE);
+        return 1;
     }
 
-    printf("Access and modification times copied from %s to %s\n", source_file, dest_file);
-
+    printf("Access and modification times copied from %s to %s\n", argv[1], argv[2]);
     return 0;
 }
+
 
 
 5b
