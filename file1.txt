@@ -490,6 +490,194 @@ Lorem epsum yayyy
 
 
 
+9a
+9achmod.c
+#include<stdio.h>
+#include<stdlib.h>
+#include<sys/stat.h>
+#include<fcntl.h>
+int main()
+{
+struct stat statbuf;
+/* turn on set-group-ID and turn off group-execute */
+if (stat("foo", &statbuf) < 0)
+	perror("stat error for foo");
+if (chmod("foo", (statbuf.st_mode & ~S_IXGRP) | S_ISGID) < 0)
+	perror("chmod error for foo");
+/* set absolute mode to "rw-r--r--" */
+if (chmod("bar", S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) < 0)
+	perror("chmod error for bar");
+exit(0);
+}
+
+9aumask.c
+#include<stdio.h>
+#include<stdlib.h>
+#include <fcntl.h>
+#include<sys/stat.h>
+#define RWRWRW (S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)
+
+int main()
+{
+umask(0);
+if (creat("foo", RWRWRW) < 0)
+	printf("creat error for foo");
+umask(S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+if (creat("bar", RWRWRW) < 0)
+	printf("creat error for bar");
+exit(0);
+}
+
+
+9b
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/types.h>
+
+int main() {
+    int file = 0, n;
+    char buffer[25];
+
+    if ((file = open("testfile.txt", O_RDONLY)) < 0) {
+        perror("file open error");
+        return 1;
+    }
+
+    if (read(file, buffer, 20) != 20) {
+        perror("file read operation failed");
+    } else {
+        write(STDOUT_FILENO, buffer, 20);
+    }
+    printf("\n");
+
+    if (lseek(file, 10, SEEK_SET) < 0) {
+        perror("lseek operation to beginning of file failed");
+    } else {
+        if (read(file, buffer, 20) != 20) {
+            perror("file read operation failed");
+        } else {
+            write(STDOUT_FILENO, buffer, 20);
+        }
+    }
+    printf("\n");
+
+    if (lseek(file, 10, SEEK_CUR) < 0) {
+        perror("lseek operation from current position failed");
+    } else {
+        if (read(file, buffer, 20) != 20) {
+            perror("file read operation failed");
+        } else {
+            write(STDOUT_FILENO, buffer, 20);
+        }
+    }
+    printf("\n");
+
+    if ((n = lseek(file, 0, SEEK_END)) < 0) {
+        perror("lseek operation to end of file failed");
+    } else {
+        printf("size of file is %d bytes\n", n);
+    }
+
+    close(file);
+    return 0;
+}
+
+10a
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <syslog.h>
+void create_daemon() {
+	pid_t pid;
+	// Fork the parent process
+	pid = fork();
+	// If the fork failed, exit
+	if (pid < 0) {
+		exit(EXIT_FAILURE);
+	}
+	// If we got a good PID, let the parent terminate
+	if (pid > 0) {
+		exit(EXIT_SUCCESS);
+	}
+	// Create a new SID for the child process
+	if (setsid() < 0) {
+		exit(EXIT_FAILURE);
+	}
+	// Change the file mode mask
+	umask(0);
+	// Change the current working directory
+	if ((chdir("/")) < 0) {
+		exit(EXIT_FAILURE);
+	}
+	// Close out the standard file descriptors
+	close(STDIN_FILENO);
+	close(STDOUT_FILENO);
+	close(STDERR_FILENO);
+	// Open new file descriptors to /dev/null
+	open("/dev/null", O_RDONLY); // stdin
+	open("/dev/null", O_WRONLY); // stdout
+	open("/dev/null", O_WRONLY); // stderr
+	}
+int main() {
+	// Create the daemon process
+	create_daemon();
+	// Open a log for writing
+	openlog("daemon_example", LOG_PID, LOG_DAEMON);
+	// Daemon loop
+	while (1) {
+		// Daemon-specific code goes here
+		syslog(LOG_NOTICE, "Daemon is running...");
+		sleep(30); // Sleep for 30 seconds
+	}
+	// Close the log
+	closelog();
+	return EXIT_SUCCESS;
+}
+
+10b
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <sys/wait.h>
+int main(){
+	int cpid = fork();
+	int cpid2 = fork();
+	if(cpid != 0 && cpid2 != 0){
+		int waitPID = 0;
+		int status;
+		printf("\nParent: I am going to wait for the process with process ID: %d\n", cpid2);
+		while(waitPID == 0){
+			waitPID = waitpid(cpid2, &status, WNOHANG);
+		}
+		printf("\nParent: Waited for child, the return value of waitpid():%d\n", waitPID);
+		printf("\nParent: The exit code of terminated child: %d\n",WEXITSTATUS(status));
+		exit(1);
+	}
+	else if(cpid == 0 && cpid2 != 0){
+	printf("\nChild1: My process ID is: %d, and my exit code is 1\n",
+	getpid());
+	exit(1);
+	}
+	else if(cpid != 0 && cpid2 == 0){
+		printf("\nChild2: My process ID is: %d, and my exit code is 2\n",getpid());
+		exit(2);
+	}
+	else{
+		printf("\nChild3: My process ID is: %d, and my exit code is 3\n",getpid());
+		exit(3);
+	}
+	return 0;
+}
+
+
+
+
+
+
 #include<stdlib.h>
 #include<stdio.h>
 #include<fcntl.h>
