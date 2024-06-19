@@ -249,17 +249,17 @@ printf("Access and modification times copied from %s to %s\n", argv[1], argv[2])
 #include <signal.h>
 #include <unistd.h>
 void handle_sigint(int sig) {
-printf("Caught SIGINT\n");
-signal(SIGINT, SIG_DFL);
+	printf("Caught SIGINT\n");
+	signal(SIGINT, SIG_DFL);
 }
 int main() {
-struct sigaction sa;
-sa.sa_handler = handle_sigint;
-sigaction (SIGINT, &sa, NULL);
+	struct sigaction sa;
+	sa.sa_handler = handle_sigint;
+	sigaction (SIGINT, &sa, NULL);
 while (1) {
-printf ("Running...\n"); sleep(1);
+	printf ("Running...\n"); sleep(1);
 }
-return 0;
+	return 0;
 }
 
 6a
