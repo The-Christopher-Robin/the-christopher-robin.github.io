@@ -490,12 +490,6 @@ void create_daemon() {
     if (pid > 0) {
         exit(EXIT_SUCCESS);
     }
-    setsid();
-    umask(0);
-    chdir("/");
-    close(STDIN_FILENO);
-    close(STDOUT_FILENO);
-    close(STDERR_FILENO);
     open("/dev/null", O_RDONLY); // stdin
     open("/dev/null", O_WRONLY); // stdout
     open("/dev/null", O_WRONLY); // stderr
