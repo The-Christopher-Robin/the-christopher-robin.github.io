@@ -419,18 +419,14 @@ Lorem epsum yayyy
 #include<stdlib.h>
 #include<sys/stat.h>
 #include<fcntl.h>
-int main()
-{
-struct stat statbuf;
-/* turn on set-group-ID and turn off group-execute */
-if (stat("foo", &statbuf) < 0)
-	perror("stat error for foo");
-if (chmod("foo", (statbuf.st_mode & ~S_IXGRP) | S_ISGID) < 0)
-	perror("chmod error for foo");
-/* set absolute mode to "rw-r--r--" */
-if (chmod("bar", S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) < 0)
-	perror("chmod error for bar");
-exit(0);
+int main() {
+    struct stat statbuf;
+
+    stat("foo", &statbuf);
+    chmod("foo", (statbuf.st_mode & ~S_IXGRP) | S_ISGID);
+    chmod("bar", S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+
+    return 0;
 }
 
 9aumask.c
@@ -438,17 +434,14 @@ exit(0);
 #include<stdlib.h>
 #include <fcntl.h>
 #include<sys/stat.h>
-#define RWRWRW (S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)
+#define RWRWRW (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH)
 
-int main()
-{
-umask(0);
-if (creat("foo", RWRWRW) < 0)
-	printf("creat error for foo");
-umask(S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-if (creat("bar", RWRWRW) < 0)
-	printf("creat error for bar");
-exit(0);
+int main() {
+    umask(0);
+    creat("foo", RWRWRW);
+    umask(S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+    creat("bar", RWRWRW);
+    return 0;
 }
 
 
