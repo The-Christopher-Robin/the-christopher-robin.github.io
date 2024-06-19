@@ -1,8 +1,9 @@
 10a
+```bash
 cc -o de filename.c
 ./de
 ps -axj
-
+```
 1a.c
 
 ```bash
