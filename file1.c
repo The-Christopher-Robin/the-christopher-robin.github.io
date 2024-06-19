@@ -291,24 +291,26 @@ return 0;
 #include <fcntl.h>
 
 int main(int argc, char *argv[]) {
-    int fd;
-    char buffer[51];  // Buffer to hold the last 50 bytes plus a null terminator
-    struct flock fvar;
-
-    fd = open(argv[1], O_RDWR);
-
-    fvar.l_type = F_WRLCK;
-    fvar.l_whence = SEEK_END;
-    fvar.l_start = -100;
-    fvar.l_len = 100;
-
+    
+    int fd = open(argv[1], O_RDWR);
+    struct flock fvar = {
+        .l_type = F_WRLCK,
+        .l_whence = SEEK_END,
+        .l_start = -100,
+        .l_len = 100
+    };
     fcntl(fd, F_SETLK, &fvar);
 
+    
+    char buffer[51];  
     lseek(fd, -50, SEEK_END);
     ssize_t bytes_read = read(fd, buffer, 50);
+    
     buffer[bytes_read] = '\0';
 
+
     puts(buffer);
+
 
     fvar.l_type = F_UNLCK;
     fcntl(fd, F_SETLK, &fvar);
