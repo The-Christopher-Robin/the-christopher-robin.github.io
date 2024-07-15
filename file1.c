@@ -278,24 +278,26 @@ while (1) {
 }
 
 6a
-#include <stdio.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 
 int main() {
     int fd1, fd2;
-    char buf[20];
+    char buf[50];
 
-    fd1 = open("test.txt", O_RDWR);                  // Open "test.txt" for reading and writing
+    fd1 = open("test.txt", O_RDWR);               // Open "test.txt" for reading and writing
     fd2 = open("sample.txt", O_CREAT | O_RDWR, 0777); // Open (or create) "sample.txt" for reading and writing
-    dup2(fd1, fd2);                                 // Duplicate fd1 to fd2
+    dup2(fd1, fd2);                               // Duplicate fd1 to fd2
 
-    lseek(fd2, 0, SEEK_END);                        // Move the file offset of fd2 to the end of the file
-    write(fd2, " Adding text", 12);                 // Write " Adding text" to the end of the file
-
-    close(fd1);                                     // Close fd1
-    close(fd2);                                     // Close fd2
-    return 0;
+    read(fd1, buf, 20);                           // Read 20 bytes from fd1 into buf
+    lseek(fd2, 0, SEEK_END);                      // Move file offset of fd2 to the end of the file
+    write(fd2, buf, 20);                          // Write 20 bytes from buf to fd2
+    printf("%s\n", buf);                          // Print the buffer content
+    close(fd1);                                   // Close fd1
+    close(fd2);                                   // Close fd2
+    return 0;                                     // Return success
 }
 
 6b
