@@ -54,32 +54,51 @@ return 0;
 }
 
 2b
-#include <stdio.h>
-#include <fcntl.h>
-#include <stdlib.h>
+#include<stdio.h>
+#include<unistd.h>
+#include<stdlib.h>
+#include<fcntl.h>
+#include<dirent.h>
+#include<sys/stat.h>
 
-void printFlags(int fd) {
-    int flags = fcntl(fd, F_GETFL);
-    printf("File flags for descriptor %d:\n", fd);
-    printf("O_APPEND: %s\n", (flags & O_APPEND) ? "Yes" : "No");
-    printf("O_NONBLOCK: %s\n", (flags & O_NONBLOCK) ? "Yes" : "No");
-    printf("O_SYNC: %s\n", (flags & O_SYNC) ? "Yes" : "No");
+int main(){
+DIR *dir;
+struct dirent *entry;
+struct stat fs;
+dir = opendir(".");
+while((entry=readdir(dir))!=NULL){
+stat(entry->d_name,&fs);
+if(fs.st_size==0){
+printf("empty files are :%s",entry->d_name);
+remove(entry->d_name);
+}
 }
 
-int main(int argc, char *argv[]) {
-printFlags(atoi(argv[1]));
-    
-    return 0;
+return 0;
 }
+
+
 
 
 3a
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/wait.h>
-int main() {
-execl("/bin/sh","sh","-c","ls -l",(char *)0);
+#include<stdio.h>
+#include<unistd.h>
+#include<stdlib.h>
+#include<fcntl.h>
+#include<dirent.h>
+#include<sys/stat.h>
+int main(){
+DIR *dir = opendir(".");
+struct dirent *entry;
+struct stat fs;
+
+while (entry=readdir(dir)) {
+stat (entry->d_name,&fs);
+if (fs.st_size==0){
+printf("empty files are: %s", entry->d_name);
+remove(entry->d_name);
+}
+}
 return 0;
 }
 
@@ -259,25 +278,24 @@ while (1) {
 }
 
 6a
-#include<stdio.h>
-#include<unistd.h>
-#include<stdlib.h>
-#include<fcntl.h>
-#include<dirent.h>
-#include<sys/stat.h>
-int main(){
-DIR *dir = opendir(".");
-struct dirent *entry;
-struct stat fs;
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
 
-while (entry=readdir(dir)) {
-stat (entry->d_name,&fs);
-if (fs.st_size==0){
-printf("empty files are: %s", entry->d_name);
-remove(entry->d_name);
-}
-}
-return 0;
+int main() {
+    int fd1, fd2;
+    char buf[20];
+
+    fd1 = open("test.txt", O_RDWR);                  // Open "test.txt" for reading and writing
+    fd2 = open("sample.txt", O_CREAT | O_RDWR, 0777); // Open (or create) "sample.txt" for reading and writing
+    dup2(fd1, fd2);                                 // Duplicate fd1 to fd2
+
+    lseek(fd2, 0, SEEK_END);                        // Move the file offset of fd2 to the end of the file
+    write(fd2, " Adding text", 12);                 // Write " Adding text" to the end of the file
+
+    close(fd1);                                     // Close fd1
+    close(fd2);                                     // Close fd2
+    return 0;
 }
 
 6b
