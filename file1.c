@@ -577,7 +577,50 @@ int main() {
     return 0;
 }
 
+11a
+	#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
+int main() {
+    printf("dup:\n");
+    int fd1 = 0, fd2 = 0;
+    char buf[10] = "abcdef";
+
+    fd1 = open("t2.txt", O_RDWR);
+
+    fd2 = dup(fd1);
+
+    printf("fd1: %d, fd2: %d\n", fd1, fd2);
+    write(fd1, buf, 6);
+    write(fd2, "123", 3);
+
+    close(fd1);
+    close(fd2);
+
+    printf("dup2:\n");
+    int fd11 = 0, fd12 = 0;
+    char buff[10] = "abcdef";
+
+    fd11 = open("dest.txt", O_RDWR);
+
+    dup2(fd11, fd12);
+
+    printf("fd11: %d, fd12: %d\n", fd11, fd12);
+    write(fd11, buff, 6);
+    write(fd12, "123", 3);
+
+    close(fd11);
+    close(fd12);
+
+    return 0;
+}
+
+
+11b
+	
 
 
 destination.txt
