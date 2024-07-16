@@ -406,13 +406,10 @@ int main() {
  int status;
  pid_t parent_pid = getpid();
  pid = fork();
- if (pid == -1) {
- perror("fork");
- exit(EXIT_FAILURE);
- } else if (pid == 0) {
+ if (pid == 0) {
  pid_t child_pid = getpid();
  printf("Child process (PID: %d) executing...\n", child_pid);
- execl("./p1", "p1", "test.txt", (char *)NULL);
+ execl("./p1", "p1", "test.txt", NULL);
  perror("execl");
  exit(EXIT_FAILURE);
  } else {
@@ -428,10 +425,6 @@ p1
 #include <stdlib.h>
 #include <unistd.h>
 int main(int argc, char *argv[]) {
- if (argc != 2) {
- fprintf(stderr, "Usage: %s <filename>\n", argv[0]);
- exit(EXIT_FAILURE);
- }
  char *filename = argv[1];
  if (access(filename, F_OK) == 0) {
  printf("File '%s' exists and can be accessed.\n", filename);
