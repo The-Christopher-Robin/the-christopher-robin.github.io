@@ -629,7 +629,7 @@ int main() {
 int main(int argc, char *argv[]) {
     pid_t pid = fork();
     if (pid == 0) {
-        execl("./p2", "p2", argv[1], argv[2], (char *)NULL);
+        execl("./p2", "p2", argv[1], argv[2], NULL);
         exit(EXIT_FAILURE);
     } else {
         int status;
