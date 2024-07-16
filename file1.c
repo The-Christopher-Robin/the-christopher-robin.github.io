@@ -656,6 +656,37 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
+12a.c
+	#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/wait.h>
+
+int main(void) {
+    pid_t pid, pid2, pid3;
+    
+    pid = fork();
+    if (pid == 0) { /* first child */
+        pid3 = fork();
+        if (pid3 == 0) {
+            sleep(5);
+            printf("Child pid is: %d\n", getpid());
+            printf("second child, parent pid = %d\n", getppid());
+            exit(0);
+        } else {
+            printf("Child pid: %d\n", getpid());
+            exit(0);
+        }
+    }
+    
+    pid2 = waitpid(pid, NULL, 0);
+    printf("terminated child's pid: %d\n", pid2);
+    
+    exit(0);
+}
+
+
 destination.txt
 This is a test file for copying. Hello
 
