@@ -621,7 +621,40 @@ int main() {
 
 11b
 	
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
 
+int main(int argc, char *argv[]) {
+    pid_t pid = fork();
+    if (pid == 0) {
+        execl("./p2", "p2", argv[1], argv[2], (char *)NULL);
+        exit(EXIT_FAILURE);
+    } else {
+        int status;
+        waitpid(pid, &status, 0);
+        if (WIFEXITED(status)) {
+            printf("Child exited with status %d\n", WEXITSTATUS(status));
+        } else {
+            printf("Child terminated abnormally\n");
+        }
+    }
+    return 0;
+}
+
+
+11p1.c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char *argv[]) {
+    int num1 = atoi(argv[1]);
+    int num2 = atoi(argv[2]);
+    int sum = num1 + num2;
+    printf("Sum: %d\n", sum);
+    return 0;
+}
 
 destination.txt
 This is a test file for copying. Hello
